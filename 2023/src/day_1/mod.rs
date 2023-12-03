@@ -1,5 +1,3 @@
-use std::str::Chars;
-
 use crate::trie::Trie;
 use once_cell::sync::Lazy;
 pub fn task_1(file: &str) -> u32 {
