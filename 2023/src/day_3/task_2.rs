@@ -1,6 +1,6 @@
 use super::utils::{is_digit, to_str, Gear};
 
-pub fn task_2(file: &str) -> u32 {
+pub fn task_2(file: &str) -> String {
     let (bytes, astrices) = get_bytes_arr_and_astrix_pos(file);
     let last_line_ind = bytes.len() - 1;
     let last_line_char = bytes[0].len() - 1;
@@ -61,7 +61,8 @@ pub fn task_2(file: &str) -> u32 {
             }
             gears
         });
-    gears.iter().map(|g| get_ratio(g, &bytes)).sum()
+    let sum: u32 = gears.iter().map(|g| get_ratio(g, &bytes)).sum();
+    sum.to_string()
 }
 
 fn get_bytes_arr_and_astrix_pos(file: &str) -> (Vec<&[u8]>, Vec<(usize, usize)>) {

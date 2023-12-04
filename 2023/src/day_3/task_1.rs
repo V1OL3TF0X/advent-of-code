@@ -1,10 +1,11 @@
 use super::utils::{adj_symbol, is_digit, to_str, Num};
 
-pub fn task_1(file: &str) -> u32 {
+pub fn task_1(file: &str) -> String {
     let (bytes_arr, nums) = get_bytes_arr_and_num_ind(file);
     let last_line_ind = bytes_arr.len() - 1;
     let last_line_char = bytes_arr[0].len() - 1;
-    nums.into_iter()
+    let sum: u32 = nums
+        .into_iter()
         .filter(|num| {
             let (start_x, end_x) = match num.line {
                 0 => (0, 1),
@@ -44,7 +45,8 @@ pub fn task_1(file: &str) -> u32 {
                 .parse::<u32>()
                 .unwrap()
         })
-        .sum()
+        .sum();
+    sum.to_string()
 }
 
 fn get_bytes_arr_and_num_ind(file: &str) -> (Vec<&[u8]>, Vec<Num>) {

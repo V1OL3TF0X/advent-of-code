@@ -1,7 +1,8 @@
 use crate::trie::Trie;
 use once_cell::sync::Lazy;
-pub fn task_1(file: &str) -> u32 {
-    file.lines().map(combine_first_last_digit).sum()
+pub fn task_1(file: &str) -> String {
+    let sum: u32 = file.lines().map(combine_first_last_digit).sum();
+    sum.to_string()
 }
 
 fn combine_first_last_digit(line: &str) -> u32 {
@@ -47,8 +48,9 @@ static REV_NUMBER_TRIE: Lazy<Trie<u32>> = Lazy::new(|| {
     ])
 });
 
-pub fn task_2(file: &str) -> u32 {
-    file.lines().map(find_first_last_digit_or_word).sum()
+pub fn task_2(file: &str) -> String {
+    let sum: u32 = file.lines().map(find_first_last_digit_or_word).sum();
+    sum.to_string()
 }
 
 fn find_first_last_digit_or_word(line: &str) -> u32 {
