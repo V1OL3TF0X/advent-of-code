@@ -1,14 +1,16 @@
 use aoc_2023::utils::{get_input, get_sample_input};
 use clap::{Parser, ValueEnum};
 
-const AOC_PROBLEM_NO: usize = 3;
+const AOC_PROBLEM_NO: usize = 4;
 
 fn main() {
     let args = Args::parse();
     let task_fns = get_all_solution_fns();
     let get_file = if args.sample {
+        println!("Running with sample solution...");
         get_sample_input
     } else {
+        println!("Running with real solution...");
         get_input
     };
     (args.day_from..=args.day_to).for_each(|t_no| {
@@ -30,7 +32,7 @@ enum Task {
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// If true, sample input will be passed to all tasks
+    /// If provided, sample input will be passed to all tasks instead of real input
     #[clap(short = 's', long = "sample_input", default_value_t = false)]
     sample: bool,
     /// Smallest day number we want to run
@@ -80,6 +82,10 @@ fn get_all_solution_fns() -> [TaskFns; AOC_PROBLEM_NO] {
         TaskFns {
             task_1: Box::new(aoc_2023::day_3::task_1),
             task_2: Box::new(aoc_2023::day_3::task_2),
+        },
+        TaskFns {
+            task_1: Box::new(aoc_2023::day_4::task_1),
+            task_2: Box::new(aoc_2023::day_4::task_2),
         },
     ]
 }
