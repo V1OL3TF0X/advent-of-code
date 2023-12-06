@@ -6,7 +6,12 @@ pub fn task_1(file: &str) -> String {
     let (time_values, dist_values) = get_time_and_dist_values(file);
     let time_values = time_values.map(|n_str| n_str.parse::<u64>().expect(n_str));
     let dist_values = dist_values.map(|n_str| n_str.parse::<u64>().expect(n_str));
-    count_prod(time_values.zip(dist_values).map(Race::from)).to_string()
+    time_values
+        .zip(dist_values)
+        .map(Race::from)
+        .map(Race::into_run_count)
+        .product::<u64>()
+        .to_string()
 }
 
 pub fn task_2(file: &str) -> String {
@@ -19,7 +24,10 @@ pub fn task_2(file: &str) -> String {
         .collect::<String>()
         .parse::<u64>()
         .expect("should be a num");
-    count_prod(std::iter::once(Race::new(time, dist))).to_string()
+    std::iter::once(Race::new(time, dist))
+        .map(Race::into_run_count)
+        .product::<u64>()
+        .to_string()
 }
 
 fn get_time_and_dist_values(file: &str) -> (SplitWhitespace<'_>, SplitWhitespace<'_>) {
@@ -29,17 +37,6 @@ fn get_time_and_dist_values(file: &str) -> (SplitWhitespace<'_>, SplitWhitespace
         get_line(&mut lines, &line_reg),
         get_line(&mut lines, &line_reg),
     )
-}
-
-fn count_prod(races: impl Iterator<Item = Race>) -> u64 {
-    races
-        .map(|race| {
-            let d = race.delta();
-            let min = ((race.time as f64 - d) / 2.0).floor() as u64 + 1;
-            let max = ((race.time as f64 + d) / 2.0).ceil() as u64 - 1;
-            max - min + 1
-        })
-        .product()
 }
 
 fn get_line<'a>(lines: &mut Lines<'a>, reg: &Regex) -> SplitWhitespace<'a> {
@@ -63,6 +60,21 @@ impl Race {
     }
     pub fn delta(&self) -> f64 {
         ((self.time * self.time - 4 * self.dist) as f64).sqrt()
+    }
+    pub fn get_record_run_count(&self) -> u64 {
+        // we have to find all x such that (t - x)*x > d
+        // this means x ∈ ((t - Δ)/2, (t + Δ)/2)
+        // where Δ = \sqrt{t^2 - 4d}
+        let d = self.delta();
+        let min_valid_x: f64 = (self.time as f64 - d) / 2.0;
+        let max_valid_x: f64 = min_valid_x + d;
+        // get rid of extra +-1, this is basically lt_max - gt_min + 1
+        // where lt_max is first integer x < max_valid_x --> max_valid_x.ceil() - 1 (.floor() would be <=, .ceil() - 1 is <)
+        //   and gt_min is first integer x > min_valid_x --> min_valid_x.floor() + 1 (.ceil() would be >=, .floor() + 1 is >)
+        max_valid_x.ceil() as u64 - min_valid_x.floor() as u64 - 1
+    }
+    pub fn into_run_count(self) -> u64 {
+        self.get_record_run_count()
     }
 }
 
