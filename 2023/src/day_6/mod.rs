@@ -16,14 +16,8 @@ pub fn task_1(file: &str) -> String {
 
 pub fn task_2(file: &str) -> String {
     let (time_values, dist_values) = get_time_and_dist_values(file);
-    let time = time_values
-        .collect::<String>()
-        .parse::<u64>()
-        .expect("should be a num");
-    let dist = dist_values
-        .collect::<String>()
-        .parse::<u64>()
-        .expect("should be a num");
+    let time = make_single_num(time_values);
+    let dist = make_single_num(dist_values);
     std::iter::once(Race::new(time, dist))
         .map(Race::into_run_count)
         .product::<u64>()
@@ -39,11 +33,17 @@ fn get_time_and_dist_values(file: &str) -> (SplitWhitespace<'_>, SplitWhitespace
     )
 }
 
+fn make_single_num<'a>(str_values: impl Iterator<Item = &'a str>) -> u64 {
+    str_values
+        .collect::<String>()
+        .parse()
+        .expect("should be a num")
+}
+
 fn get_line<'a>(lines: &mut Lines<'a>, reg: &Regex) -> SplitWhitespace<'a> {
     let line = lines.next().unwrap();
     reg.captures(line)
-        .expect(line)
-        .name("values")
+        .and_then(|v| v.name("values"))
         .expect(line)
         .as_str()
         .split_whitespace()
