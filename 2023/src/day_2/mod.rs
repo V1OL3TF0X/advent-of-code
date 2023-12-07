@@ -1,3 +1,5 @@
+use crate::utils::measure_elapsed;
+
 struct Game {
     id: u32,
     red: u32,
@@ -98,19 +100,21 @@ pub fn task_1(file: &str) -> String {
     let red_limit = 12;
     let green_limit = 13;
     let blue_limit = 14;
-    let sum: u32 = file
-        .lines()
-        .flat_map(|l| Game::try_from((l, red_limit, green_limit, blue_limit)))
-        .map(|g: Game| g.get_id())
-        .sum();
+    let sum: u32 = measure_elapsed(|| {
+        file.lines()
+            .flat_map(|l| Game::try_from((l, red_limit, green_limit, blue_limit)))
+            .map(|g: Game| g.get_id())
+            .sum()
+    });
     sum.to_string()
 }
 
 pub fn task_2(file: &str) -> String {
-    let sum: u32 = file
-        .lines()
-        .map(Game::from)
-        .map(|g: Game| g.get_power())
-        .sum();
+    let sum: u32 = measure_elapsed(|| {
+        file.lines()
+            .map(Game::from)
+            .map(|g: Game| g.get_power())
+            .sum()
+    });
     sum.to_string()
 }

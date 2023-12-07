@@ -1,35 +1,35 @@
 use std::str::{Lines, SplitWhitespace};
 
-use regex::Regex;
+use crate::utils::measure_elapsed;
 
 pub fn task_1(file: &str) -> String {
-    let (time_values, dist_values) = get_time_and_dist_values(file);
-    let time_values = time_values.map(|n_str| n_str.parse::<u64>().expect(n_str));
-    let dist_values = dist_values.map(|n_str| n_str.parse::<u64>().expect(n_str));
-    time_values
-        .zip(dist_values)
-        .map(Race::from)
-        .map(Race::into_run_count)
-        .product::<u64>()
-        .to_string()
+    measure_elapsed(|| {
+        let (time_values, dist_values) = get_time_and_dist_values(file);
+        let time_values = time_values.map(|n| n.parse::<u64>().expect(n));
+        let dist_values = dist_values.map(|n| n.parse::<u64>().expect(n));
+        time_values
+            .zip(dist_values)
+            .map(Race::from)
+            .map(Race::into_run_count)
+            .product::<u64>()
+            .to_string()
+    })
 }
 
 pub fn task_2(file: &str) -> String {
-    let (time_values, dist_values) = get_time_and_dist_values(file);
-    let time = make_single_num(time_values);
-    let dist = make_single_num(dist_values);
-    std::iter::once(Race::new(time, dist))
-        .map(Race::into_run_count)
-        .product::<u64>()
-        .to_string()
+    measure_elapsed(|| {
+        let (time_values, dist_values) = get_time_and_dist_values(file);
+        let time = make_single_num(time_values);
+        let dist = make_single_num(dist_values);
+        Race::new(time, dist).get_record_run_count().to_string()
+    })
 }
 
 fn get_time_and_dist_values(file: &str) -> (SplitWhitespace<'_>, SplitWhitespace<'_>) {
-    let line_reg = Regex::new(r"(?<name>\w+):\s+(?<values>\d+(?: +\d+)*)").unwrap();
     let mut lines = file.lines();
     (
-        get_line(&mut lines, &line_reg),
-        get_line(&mut lines, &line_reg),
+        get_line(&mut lines, "Time:"),
+        get_line(&mut lines, "Distance:"),
     )
 }
 
@@ -40,12 +40,12 @@ fn make_single_num<'a>(str_values: impl Iterator<Item = &'a str>) -> u64 {
         .expect("should be a num")
 }
 
-fn get_line<'a>(lines: &mut Lines<'a>, reg: &Regex) -> SplitWhitespace<'a> {
-    let line = lines.next().unwrap();
-    reg.captures(line)
-        .and_then(|v| v.name("values"))
-        .expect(line)
-        .as_str()
+fn get_line<'a>(lines: &mut Lines<'a>, prefix: &str) -> SplitWhitespace<'a> {
+    lines
+        .next()
+        .unwrap()
+        .strip_prefix(prefix)
+        .unwrap()
         .split_whitespace()
 }
 #[derive(Debug)]

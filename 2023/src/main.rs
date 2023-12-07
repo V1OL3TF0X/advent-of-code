@@ -1,3 +1,5 @@
+use std::array::IntoIter;
+
 use aoc_2023::utils::{get_input, get_sample_input};
 use clap::{Parser, ValueEnum};
 
@@ -13,10 +15,15 @@ fn main() {
         println!("Running with real solution...");
         get_input
     };
-    (args.day_from..=args.day_to).for_each(|t_no| {
-        let file = get_file(&format!("day_{t_no}"));
-        task_fns[t_no - 1].run(&file, args.mode, t_no)
-    });
+    task_fns
+        .enumerate()
+        .skip(args.day_from - 1)
+        .take(args.day_to - args.day_from)
+        .for_each(|(i, t_fns)| {
+            let t_no = i + 1;
+            let file = get_file(&format!("day_{t_no}"));
+            t_fns.run(&file, args.mode, t_no)
+        });
 }
 
 #[derive(ValueEnum, Clone, Copy, Debug)]
@@ -51,25 +58,25 @@ struct TaskFns {
     task_2: Box<dyn Fn(&str) -> String>,
 }
 
-fn out(day: usize) -> impl Fn(u8, String) {
-    move |task_no: u8, taskout: String| println!("Day {day}, task {task_no}: {taskout}")
+fn out(day: usize, input: &str) -> impl Fn(u8, Box<dyn Fn(&str) -> String>) + '_ {
+    move |task_no, task_fn| println!("Day {day}, task {task_no}: {}", task_fn(input))
 }
 
 impl TaskFns {
-    fn run(&self, file: &str, mode: Task, day: usize) {
-        let run_t = out(day);
+    fn run(self, file: &str, mode: Task, day: usize) {
+        let run_t = out(day, file);
         match mode {
             Task::Both => {
-                run_t(1, (self.task_1)(file));
-                run_t(2, (self.task_2)(file));
+                run_t(1, self.task_1);
+                run_t(2, self.task_2);
             }
-            Task::First => run_t(1, (self.task_1)(file)),
-            Task::Second => run_t(2, (self.task_2)(file)),
+            Task::First => run_t(1, self.task_1),
+            Task::Second => run_t(2, self.task_2),
         }
     }
 }
 
-fn get_all_solution_fns() -> [TaskFns; AOC_PROBLEM_NO] {
+fn get_all_solution_fns() -> IntoIter<TaskFns, AOC_PROBLEM_NO> {
     [
         TaskFns {
             task_1: Box::new(aoc_2023::day_1::task_1),
@@ -96,6 +103,7 @@ fn get_all_solution_fns() -> [TaskFns; AOC_PROBLEM_NO] {
             task_2: Box::new(aoc_2023::day_6::task_2),
         },
     ]
+    .into_iter()
 }
 
 fn day_in_range(s: &str) -> Result<usize, String> {
