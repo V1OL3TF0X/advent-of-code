@@ -48,16 +48,6 @@ impl<T: Copy> Trie<T> {
         }
         current_node.end_value = Some(value);
     }
-
-    pub fn get_value(&self, word: &str) -> Option<T> {
-        let mut current_node = &self.root;
-
-        for c in word.chars() {
-            current_node = current_node.children.get(&c)?
-        }
-
-        current_node.end_value
-    }
 }
 
 impl<T: Sized + Copy> From<Vec<(&str, T)>> for Trie<T> {

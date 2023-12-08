@@ -30,11 +30,11 @@ impl MakePlayer for Task2 {
         let joker_count = v.iter().find(|(c, _)| c == &Card::Joker).map_or(0, |v| v.1);
         match (v.len(), joker_count, v[0].1) {
             (1, _, _) => Hand::FiveOfKind,              // XXXXX
-            (2, jc, _) if jc != 0 => Hand::FiveOfKind,  // XXXX J or JJJJ X
-            (2, _, 4) => Hand::FourOfKind,              // XXXX Y=
-            (2, _, _) => Hand::FullHouse,               // XXX YY
-            (3, jc, 3) if jc != 0 => Hand::FourOfKind,  // XXX J Y or JJJ X Y
-            (3, _, 3) => Hand::ThreeOfKind,             // XXX Y Z
+            (2, 0, 4) => Hand::FourOfKind,              // XXXX Y=
+            (2, 0, _) => Hand::FullHouse,               // XXX YY
+            (2, _, _) => Hand::FiveOfKind,              // XXXX J or JJJJ X
+            (3, 0, 3) => Hand::ThreeOfKind,             // XXX Y Z
+            (3, _, 3) => Hand::FourOfKind,              // XXX J Y or JJJ X Y
             (3, 0, _) => Hand::TwoPair,                 // XX YY Z
             (3, 1, _) => Hand::FullHouse,               // XX YY J
             (3, 2, _) => Hand::FourOfKind,              // XX JJ Y
