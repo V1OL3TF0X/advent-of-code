@@ -3,7 +3,7 @@ use std::array::IntoIter;
 use aoc_2023::utils::{get_input, get_sample_input};
 use clap::{Parser, ValueEnum};
 
-const AOC_PROBLEM_NO: usize = 6;
+const AOC_PROBLEM_NO: usize = 7;
 
 fn main() {
     let args = Args::parse();
@@ -18,7 +18,7 @@ fn main() {
     task_fns
         .enumerate()
         .skip(args.day_from - 1)
-        .take(args.day_to - args.day_from)
+        .take(args.day_to - args.day_from + 1)
         .for_each(|(i, t_fns)| {
             let t_no = i + 1;
             let file = get_file(&format!("day_{t_no}"));
@@ -101,6 +101,10 @@ fn get_all_solution_fns() -> IntoIter<TaskFns, AOC_PROBLEM_NO> {
         TaskFns {
             task_1: Box::new(aoc_2023::day_6::task_1),
             task_2: Box::new(aoc_2023::day_6::task_2),
+        },
+        TaskFns {
+            task_1: Box::new(aoc_2023::day_7::task_1),
+            task_2: Box::new(aoc_2023::day_7::task_2),
         },
     ]
     .into_iter()

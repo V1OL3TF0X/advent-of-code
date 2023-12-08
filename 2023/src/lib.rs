@@ -5,5 +5,7 @@ pub mod day_3;
 pub mod day_4;
 pub mod day_5;
 pub mod day_6;
-pub mod trie;
+pub mod day_7;
+pub(crate) mod trie;
 pub mod utils;
+pub(crate) mod vecmap;
