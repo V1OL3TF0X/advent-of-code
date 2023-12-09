@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-
 #[derive(Debug)]
 pub struct TrieNode<T> {
     end_value: Option<T>,
-    children: HashMap<char, TrieNode<T>>,
+    children: Vec<(char, TrieNode<T>)>,
 }
 
 impl<T> Default for TrieNode<T> {
@@ -17,7 +15,21 @@ impl<T> Default for TrieNode<T> {
 
 impl<T: Copy> TrieNode<T> {
     pub fn has_child(&self, key: &char) -> Option<&TrieNode<T>> {
-        self.children.get(key)
+        self.children
+            .iter()
+            .find(|(k, _v)| k == key)
+            .map(|(_k, v)| v)
+    }
+
+    pub fn get_or_insert_new(&mut self, key: char) -> &mut TrieNode<T> {
+        let pos = self.children.iter_mut().position(|(k, _v)| k == &key);
+        if let Some(i) = pos {
+            &mut self.children[i].1
+        } else {
+            let n = TrieNode::default();
+            self.children.push((key, n));
+            &mut self.children.last_mut().unwrap().1
+        }
     }
 
     pub fn get_value(&self) -> Option<T> {
@@ -37,14 +49,14 @@ impl<T: Copy> Trie<T> {
         }
     }
     pub fn has_branch(&self, key: &char) -> Option<&TrieNode<T>> {
-        self.root.children.get(key)
+        self.root.has_child(key)
     }
 
     pub fn insert(&mut self, word: &str, value: T) {
         let mut current_node = &mut self.root;
 
         for c in word.chars() {
-            current_node = current_node.children.entry(c).or_default();
+            current_node = current_node.get_or_insert_new(c);
         }
         current_node.end_value = Some(value);
     }

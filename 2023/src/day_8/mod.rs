@@ -2,53 +2,44 @@ use std::{collections::HashMap, iter, str::Lines};
 
 use regex::{Captures, Regex};
 
-use crate::utils::measure_elapsed;
-
 type NodeMap<'a> = HashMap<&'a str, (&'a str, &'a str)>;
 
 pub fn task_1(file: &str) -> String {
-    measure_elapsed(|| {
-        let mut lines = file.lines();
-        let instructions = lines.next().unwrap().chars().cycle();
-        lines.next().unwrap();
-        let nodes = lines.map(make_node).collect();
-        let mut curr = "AAA";
-        (instructions
-            .take_while(|instruction| {
-                curr = make_step(&nodes, curr, *instruction);
-                curr != "ZZZ"
-            })
-            .count()
-            + 1)
-        .to_string()
-    })
+    let mut lines = file.lines();
+    let instructions = lines.next().unwrap().chars().cycle();
+    lines.next().unwrap();
+    let nodes = lines.map(make_node).collect();
+    let mut curr = "AAA";
+    (instructions
+        .take_while(|instruction| {
+            curr = make_step(&nodes, curr, *instruction);
+            curr != "ZZZ"
+        })
+        .count()
+        + 1)
+    .to_string()
 }
 
 pub fn task_2(file: &str) -> String {
-    measure_elapsed(|| {
-        let mut lines = file.lines();
-        let instructions: Vec<char> = lines.next().unwrap().chars().collect();
-        let instruction_num = instructions.len();
-        lines.next().unwrap();
-        let (curr, nodes) = make_nodes_2(lines);
+    let mut lines = file.lines();
+    let instructions: Vec<char> = lines.next().unwrap().chars().collect();
+    let instruction_num = instructions.len();
+    lines.next().unwrap();
+    let (curr, nodes) = make_nodes_2(lines);
 
-        let shortest_z_cycle: Vec<_> = curr
-            .into_iter()
-            .map(|mut c| {
-                iter::repeat(0..instruction_num)
-                    .flatten()
-                    .take_while(|ind| {
-                        {
-                            c = make_step(&nodes, c, instructions[*ind]);
-                        }
-                        c.as_bytes()[2] != b'Z'
-                    })
-                    .count()
-                    + 1
-            })
-            .collect();
-        shortest_z_cycle.into_iter().fold(1, lcm).to_string()
-    })
+    curr.into_iter()
+        .map(|mut c| {
+            iter::repeat(0..instruction_num)
+                .flatten()
+                .take_while(|ind| {
+                    c = make_step(&nodes, c, instructions[*ind]);
+                    c.as_bytes()[2] != b'Z'
+                })
+                .count()
+                + 1
+        })
+        .fold(1, lcm)
+        .to_string()
 }
 
 lazy_static::lazy_static! {

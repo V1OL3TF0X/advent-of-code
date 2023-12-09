@@ -16,7 +16,7 @@ pub fn get_sample_input(mod_name: &str) -> String {
     get_in(mod_name, "sample_input")
 }
 
-pub(crate) fn measure_elapsed<T>(f: impl FnOnce() -> T) -> T {
+pub fn measure_elapsed<T>(f: impl FnOnce() -> T) -> T {
     let b = Instant::now();
     let r = f();
     let el = b.elapsed();

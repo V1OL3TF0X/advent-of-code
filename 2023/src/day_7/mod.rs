@@ -1,7 +1,7 @@
 mod task_1;
 mod task_2;
 
-use crate::{utils::measure_elapsed, vecmap::VecMap};
+use crate::vecmap::VecMap;
 pub fn task_1(file: &str) -> String {
     solve::<task_1::Task1>(file)
 }
@@ -10,17 +10,15 @@ pub fn task_2(file: &str) -> String {
 }
 
 fn solve<V: MakePlayer>(file: &str) -> String {
-    measure_elapsed(|| {
-        let mut hands: Vec<_> = file.lines().map(make_player::<V>).collect();
-        hands.sort();
-        hands
-            .into_iter()
-            .map(|h| h.bid)
-            .enumerate()
-            .map(|(i, b)| (i as u32 + 1) * b)
-            .sum::<u32>()
-            .to_string()
-    })
+    let mut hands: Vec<_> = file.lines().map(make_player::<V>).collect();
+    hands.sort();
+    hands
+        .into_iter()
+        .map(|h| h.bid)
+        .enumerate()
+        .map(|(i, b)| (i as u32 + 1) * b)
+        .sum::<u32>()
+        .to_string()
 }
 
 #[derive(Eq, Debug)]

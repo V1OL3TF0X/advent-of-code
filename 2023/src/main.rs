@@ -1,6 +1,6 @@
 use std::array::IntoIter;
 
-use aoc_2023::utils::{get_input, get_sample_input};
+use aoc_2023::utils::{get_input, get_sample_input, measure_elapsed};
 use clap::{Parser, ValueEnum};
 
 const AOC_PROBLEM_NO: usize = 9;
@@ -59,7 +59,12 @@ struct TaskFns {
 }
 
 fn out(day: usize, input: &str) -> impl Fn(u8, Box<dyn Fn(&str) -> String>) + '_ {
-    move |task_no, task_fn| println!("Day {day}, task {task_no}: {}", task_fn(input))
+    move |task_no, task_fn| {
+        println!(
+            "Day {day}, task {task_no}: {}",
+            measure_elapsed(|| task_fn(input))
+        )
+    }
 }
 
 impl TaskFns {

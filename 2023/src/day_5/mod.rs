@@ -1,7 +1,5 @@
 use std::ops::RangeInclusive;
 
-use crate::utils::measure_elapsed;
-
 const MAPS: [&str; 7] = [
     "seed-to-soil map:",
     "soil-to-fertilizer map:",
@@ -23,8 +21,8 @@ pub fn task_1(file: &str) -> String {
             .1,
     );
     let seed_no = seeds.len();
-    measure_elapsed(|| {
-        let locations = MAPS.iter().fold(seeds, |mut prev, _| {
+    MAPS.iter()
+        .fold(seeds, |mut prev, _| {
             let mut swapped = Vec::with_capacity(seed_no);
             lines
                 .by_ref()
@@ -44,9 +42,11 @@ pub fn task_1(file: &str) -> String {
                 });
             swapped.extend(prev);
             swapped
-        });
-        locations.iter().min().unwrap().to_string()
-    })
+        })
+        .into_iter()
+        .min()
+        .unwrap()
+        .to_string()
 }
 
 fn to_nums(num_str: &str) -> Vec<u64> {
@@ -76,8 +76,8 @@ pub fn task_2(file: &str) -> String {
             .1,
     );
     let seed_no = seed_ranges.len();
-    measure_elapsed(|| {
-        let locations = MAPS.iter().fold(seed_ranges, |mut prev, _| {
+    MAPS.iter()
+        .fold(seed_ranges, |mut prev, _| {
             let mut swapped = Vec::with_capacity(seed_no);
             lines
                 .by_ref()
@@ -122,14 +122,12 @@ pub fn task_2(file: &str) -> String {
                 });
             swapped.extend(prev);
             swapped
-        });
-        locations
-            .iter()
-            .map(|r| r.start())
-            .min()
-            .unwrap()
-            .to_string()
-    })
+        })
+        .iter()
+        .map(RangeInclusive::<u64>::start)
+        .min()
+        .unwrap()
+        .to_string()
 }
 
 fn intersect(a: &RangeInclusive<u64>, b: &RangeInclusive<u64>) -> RangeInclusive<u64> {

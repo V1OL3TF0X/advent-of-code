@@ -1,37 +1,37 @@
 use regex::Regex;
 use std::collections::HashSet;
 
-use crate::utils::measure_elapsed;
 pub fn task_1(file: &str) -> String {
-    let sum: u32 = measure_elapsed(|| file.lines().map(Card::from).map(Card::get_score).sum());
-    sum.to_string()
+    file.lines()
+        .map(Card::from)
+        .map(Card::get_score)
+        .sum::<u32>()
+        .to_string()
 }
 
 pub fn task_2(file: &str) -> String {
     let card_num = file.lines().count();
-    measure_elapsed(|| {
-        let last_card_ind = card_num - 1;
-        let mut card_count = vec![1; card_num];
-        file.lines()
-            .map(Card::from)
-            .map(Card::into_match_num)
-            .enumerate()
-            .for_each(|(i, mut score)| {
-                if score == 0 {
-                    return;
-                }
-                let mut add_to = i + 1;
-                while add_to < last_card_ind && score != 0 {
-                    card_count[add_to] += card_count[i];
-                    add_to += 1;
-                    score -= 1;
-                }
-                if score != 0 {
-                    card_count[last_card_ind] += card_count[i] * score;
-                }
-            });
-        card_count.into_iter().sum::<u32>().to_string()
-    })
+    let last_card_ind = card_num - 1;
+    let mut card_count = vec![1; card_num];
+    file.lines()
+        .map(Card::from)
+        .map(Card::into_match_num)
+        .enumerate()
+        .for_each(|(i, mut score)| {
+            if score == 0 {
+                return;
+            }
+            let mut add_to = i + 1;
+            while add_to < last_card_ind && score != 0 {
+                card_count[add_to] += card_count[i];
+                add_to += 1;
+                score -= 1;
+            }
+            if score != 0 {
+                card_count[last_card_ind] += card_count[i] * score;
+            }
+        });
+    card_count.into_iter().sum::<u32>().to_string()
 }
 
 #[derive(Debug)]

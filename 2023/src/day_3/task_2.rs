@@ -1,72 +1,70 @@
-use crate::utils::measure_elapsed;
-
 use super::utils::{is_digit, to_str, Gear};
 
 pub fn task_2(file: &str) -> String {
     let (bytes, astrices) = get_bytes_arr_and_astrix_pos(file);
     let last_line_ind = bytes.len() - 1;
     let last_line_char = bytes[0].len() - 1;
-    measure_elapsed(|| {
-        let gears = astrices
-            .iter()
-            .fold(vec![], |mut gears, &(astrix_x, astrix_y)| {
-                let mut found = vec![];
-                let can_check_prev = astrix_y != 0;
-                let can_check_next = astrix_y != last_line_char;
-                if astrix_x != 0 {
-                    //check top tow
-                    if is_digit(&bytes[astrix_x - 1][astrix_y]) {
-                        // .d. or dd. or .dd or ddd -> one number
-                        found.push((astrix_x - 1, astrix_y));
-                    } else {
-                        if can_check_prev && is_digit(&bytes[astrix_x - 1][astrix_y - 1]) {
-                            found.push((astrix_x - 1, astrix_y - 1));
-                        }
-                        if can_check_next && is_digit(&bytes[astrix_x - 1][astrix_y + 1]) {
-                            found.push((astrix_x - 1, astrix_y + 1));
-                        }
+    astrices
+        .iter()
+        .fold(vec![], |mut gears, &(astrix_x, astrix_y)| {
+            let mut found = vec![];
+            let can_check_prev = astrix_y != 0;
+            let can_check_next = astrix_y != last_line_char;
+            if astrix_x != 0 {
+                //check top tow
+                if is_digit(&bytes[astrix_x - 1][astrix_y]) {
+                    // .d. or dd. or .dd or ddd -> one number
+                    found.push((astrix_x - 1, astrix_y));
+                } else {
+                    if can_check_prev && is_digit(&bytes[astrix_x - 1][astrix_y - 1]) {
+                        found.push((astrix_x - 1, astrix_y - 1));
+                    }
+                    if can_check_next && is_digit(&bytes[astrix_x - 1][astrix_y + 1]) {
+                        found.push((astrix_x - 1, astrix_y + 1));
                     }
                 }
-                if can_check_prev && is_digit(&bytes[astrix_x][astrix_y - 1]) {
-                    if found.len() == 2 {
-                        // more than two - not a gear
-                        return gears;
-                    } else {
-                        // d*?
-                        found.push((astrix_x, astrix_y - 1))
-                    }
-                }
-                if can_check_next && is_digit(&bytes[astrix_x][astrix_y + 1]) {
-                    if found.len() == 2 {
-                        // more than two - not a gear
-                        return gears;
-                    } else {
-                        // ?*d
-                        found.push((astrix_x, astrix_y + 1))
-                    }
-                }
-                if astrix_x != last_line_ind {
-                    //check top tow
-                    if is_digit(&bytes[astrix_x + 1][astrix_y]) {
-                        // .d. or dd. or .dd or ddd -> one number
-                        found.push((astrix_x + 1, astrix_y));
-                    } else {
-                        if can_check_prev && is_digit(&bytes[astrix_x + 1][astrix_y - 1]) {
-                            found.push((astrix_x + 1, astrix_y - 1));
-                        }
-                        if can_check_next && is_digit(&bytes[astrix_x + 1][astrix_y + 1]) {
-                            found.push((astrix_x + 1, astrix_y + 1));
-                        }
-                    }
-                }
+            }
+            if can_check_prev && is_digit(&bytes[astrix_x][astrix_y - 1]) {
                 if found.len() == 2 {
-                    gears.push(Gear::from(found));
+                    // more than two - not a gear
+                    return gears;
+                } else {
+                    // d*?
+                    found.push((astrix_x, astrix_y - 1))
                 }
-                gears
-            });
-        let sum: u32 = gears.iter().map(|g| get_ratio(g, &bytes)).sum();
-        sum.to_string()
-    })
+            }
+            if can_check_next && is_digit(&bytes[astrix_x][astrix_y + 1]) {
+                if found.len() == 2 {
+                    // more than two - not a gear
+                    return gears;
+                } else {
+                    // ?*d
+                    found.push((astrix_x, astrix_y + 1))
+                }
+            }
+            if astrix_x != last_line_ind {
+                //check top tow
+                if is_digit(&bytes[astrix_x + 1][astrix_y]) {
+                    // .d. or dd. or .dd or ddd -> one number
+                    found.push((astrix_x + 1, astrix_y));
+                } else {
+                    if can_check_prev && is_digit(&bytes[astrix_x + 1][astrix_y - 1]) {
+                        found.push((astrix_x + 1, astrix_y - 1));
+                    }
+                    if can_check_next && is_digit(&bytes[astrix_x + 1][astrix_y + 1]) {
+                        found.push((astrix_x + 1, astrix_y + 1));
+                    }
+                }
+            }
+            if found.len() == 2 {
+                gears.push(Gear::from(found));
+            }
+            gears
+        })
+        .into_iter()
+        .map(|ref g| get_ratio(g, &bytes))
+        .sum::<u32>()
+        .to_string()
 }
 
 fn get_bytes_arr_and_astrix_pos(file: &str) -> (Vec<&[u8]>, Vec<(usize, usize)>) {
