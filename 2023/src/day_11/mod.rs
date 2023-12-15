@@ -17,37 +17,45 @@ struct Universe {
 
 impl Universe {
     pub fn distances_sum(&self, expansion_rate: u128) -> u128 {
-        let mut pairs = 0;
+        let first_expanded_col = self.expanded_cols[0];
+        let last_expanded_col = self.expanded_cols[self.expanded_cols.len() - 1];
         self.galaxies
             .iter()
             .enumerate()
-            .map(|(i, g1)| {
-                self.galaxies.iter().skip(i + 1).fold(0, |sum, g2| {
-                    pairs += 1;
-                    let (start_x, end_x) = if g1.0 > g2.0 {
-                        (g2.0, g1.0)
-                    } else {
-                        (g1.0, g2.0)
-                    };
-                    let expanded_x = self
-                        .expanded_rows
-                        .iter()
-                        .filter(|x| (start_x..end_x).contains(x))
-                        .count() as u128
-                        * (expansion_rate - 1);
-                    let dist_x = end_x - start_x;
+            .map(|(row_num, g1)| {
+                let mut expanded_x = 0;
+                let mut last_x = g1.0;
+                let mut last_ex_ind = 0;
+                self.galaxies.iter().skip(row_num + 1).fold(0, |sum, g2| {
+                    // because we're pushing galaxies iteratively, g1 row <= g2 row
+                    let dist_x = g2.0 - g1.0;
+                    if g2.0 > g1.0 {
+                        let new_expanded = self
+                            .expanded_rows
+                            .iter()
+                            .skip(last_ex_ind)
+                            .take_while(|&&r| r < g2.0)
+                            .count();
+                        last_ex_ind += new_expanded;
+                        expanded_x += new_expanded as u128;
+                        last_x = g2.0;
+                    }
                     let (start_y, end_y) = if g1.1 > g2.1 {
                         (g2.1, g1.1)
                     } else {
                         (g1.1, g2.1)
                     };
-                    let expanded_y = self
-                        .expanded_cols
-                        .iter()
-                        .filter(|y| (start_y..end_y).contains(y))
-                        .count() as u128
-                        * (expansion_rate - 1);
                     let dist_y = end_y - start_y;
+                    let expanded_y = if g2.0 >= first_expanded_col && g1.0 <= last_expanded_col {
+                        self.expanded_cols
+                            .iter()
+                            .filter(|y| (start_y..end_y).contains(y))
+                            .count() as u128
+                            * (expansion_rate - 1)
+                    } else {
+                        0
+                    };
+
                     sum + dist_x as u128 + expanded_x + dist_y as u128 + expanded_y
                 })
             })
