@@ -3,9 +3,6 @@ use std::{fmt::Debug, marker::PhantomData, str::FromStr};
 trait OperationChain: Debug {
     const LAST: Operation;
     fn as_next(op: &Operation) -> Operation;
-    fn next(op: &mut Operation) {
-        *op = Self::as_next(op);
-    }
 }
 
 #[derive(Debug)]
