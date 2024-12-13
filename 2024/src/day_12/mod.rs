@@ -3,7 +3,7 @@ use rustc_hash::FxHashMap;
 use union_find::{QuickUnionUf, UnionBySize, UnionFind};
 
 pub fn task_1(file: &str) -> String {
-    let mut table: Vec<Vec<char>> = file.lines().map(|l| l.chars().collect()).collect();
+    let table: Vec<Vec<char>> = file.lines().map(|l| l.chars().collect()).collect();
     let mut perimiters = vec![4; table[0].len() * table.len()];
     let mut uf = QuickUnionUf::<UnionBySize>::new(table.len() * table[0].len());
     let mut i = 0;

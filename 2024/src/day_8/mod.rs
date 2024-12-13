@@ -1,9 +1,7 @@
-use itertools::Itertools;
 use std::{
     cmp::Ordering,
     collections::{HashMap, HashSet},
     str::FromStr,
-    usize,
 };
 
 struct Antennas {
