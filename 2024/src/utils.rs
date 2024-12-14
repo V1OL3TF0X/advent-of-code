@@ -1,4 +1,4 @@
-use std::{fmt::Debug, time::Instant};
+use std::{fmt::Debug, process::Command, time::Instant};
 
 pub fn get_input(mod_name: &str) -> String {
     get_in(mod_name, "input")
@@ -29,4 +29,18 @@ where
     T::Err: Debug,
 {
     line.split(' ').map(|n| n.parse::<T>().expect(n)).collect()
+}
+
+pub fn clear_terminal_screen() {
+    let result = if cfg!(target_os = "windows") {
+        Command::new("cmd").args(["/c", "cls"]).spawn()
+    } else {
+        // "clear" or "tput reset"
+        Command::new("tput").arg("reset").spawn()
+    };
+
+    // Alternative solution:
+    if result.is_err() {
+        print!("{esc}c", esc = 27 as char);
+    }
 }
