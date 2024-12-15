@@ -5,12 +5,25 @@ use std::{
     ops::{Add, AddAssign},
 };
 
+use rustc_hash::FxHashSet;
+
 #[derive(PartialEq, Eq)]
 enum Direction {
     Left,
     Right,
     Top,
     Bottom,
+}
+
+impl Debug for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Direction::Left => write!(f, "<"),
+            Direction::Right => write!(f, ">"),
+            Direction::Top => write!(f, "^"),
+            Direction::Bottom => write!(f, "v"),
+        }
+    }
 }
 
 impl From<char> for Direction {
@@ -48,13 +61,21 @@ impl From<&Direction> for Point {
     }
 }
 
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
 struct Point(i64, i64);
 
+impl Add<&Direction> for &Point {
+    type Output = Point;
+
+    fn add(self, rhs: &Direction) -> Self::Output {
+        self + &Point::from(rhs)
+    }
+}
 impl Add<Direction> for &Point {
     type Output = Point;
 
     fn add(self, rhs: Direction) -> Self::Output {
-        self + &Point::from(&rhs)
+        self + &rhs
     }
 }
 
@@ -72,11 +93,17 @@ impl AddAssign<&Self> for Point {
         self.1 += rhs.1;
     }
 }
+impl AddAssign<Direction> for Point {
+    fn add_assign(&mut self, rhs: Direction) {
+        *self += &Point::from(&rhs)
+    }
+}
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Default)]
 enum TileTask1 {
     Box,
     Wall,
+    #[default]
     Floor,
 }
 
@@ -90,7 +117,7 @@ impl<'a> From<&'a TileTask1> for char {
     }
 }
 
-trait Tileable: Sized {
+trait Tileable: Sized + Default {
     fn is_box(&self) -> bool;
     fn move_robot(wh: &mut Warehouse<Self>, d: Direction, blocked: &mut Vec<Direction>);
     fn parse(v: char) -> Vec<Self>;
@@ -180,6 +207,12 @@ where
     fn set_robot(&mut self, v: T) {
         self.plan[self.robot.1 as usize][self.robot.0 as usize] = v;
     }
+    fn swap(&mut self, p1: &Point, p2: &Point) {
+        let mut placeholder = T::default();
+        std::mem::swap(&mut placeholder, self.get_mut(p1));
+        std::mem::swap(&mut placeholder, self.get_mut(p2));
+        std::mem::swap(&mut placeholder, self.get_mut(p1));
+    }
     fn sum_of_gps(&self) -> u64 {
         self.plan
             .iter()
@@ -239,11 +272,12 @@ pub fn task_1(file: &str) -> String {
     solve::<TileTask1>(file)
 }
 
-#[derive(PartialEq, Eq, Clone)]
+#[derive(PartialEq, Eq, Clone, Default)]
 enum TileTask2 {
     BoxLeft,
     BoxRight,
     Wall,
+    #[default]
     Floor,
 }
 
@@ -260,7 +294,7 @@ impl<'a> From<&'a TileTask2> for char {
 
 impl Tileable for TileTask2 {
     fn is_box(&self) -> bool {
-        *self == Self::BoxLeft || *self == Self::BoxRight
+        *self == Self::BoxLeft
     }
 
     fn parse(v: char) -> Vec<Self> {
@@ -282,19 +316,15 @@ impl Tileable for TileTask2 {
             TileTask2::BoxLeft => {
                 if can_move_box(warehouse, &considered_pos, &d) {
                     move_box(warehouse, &considered_pos, &d);
-                    warehouse.robot += &movement;
-                    warehouse.set_robot(TileTask2::Floor);
                     blocked.clear();
                 } else {
                     blocked.push(d);
                 }
             }
             TileTask2::BoxRight => {
-                let left_corner = &considered_pos + &((&Direction::Left).into());
+                let left_corner = &considered_pos + Direction::Left;
                 if can_move_box(warehouse, &left_corner, &d) {
                     move_box(warehouse, &left_corner, &d);
-                    warehouse.robot += &movement;
-                    warehouse.set_robot(TileTask2::Floor);
                     blocked.clear();
                 } else {
                     blocked.push(d);
@@ -307,6 +337,40 @@ impl Tileable for TileTask2 {
             }
         }
     }
+}
+
+fn get_next_boxes_to_check(
+    warehouse: &Warehouse<TileTask2>,
+    boxes: &FxHashSet<Point>,
+    d: &Direction,
+) -> Option<FxHashSet<Point>> {
+    let mut boxes_to_check = FxHashSet::default();
+    for left_corner in boxes.iter() {
+        let movement = d.into();
+        let mut next_left_pos = &movement + left_corner;
+        match warehouse.get(&next_left_pos) {
+            TileTask2::BoxLeft => {
+                boxes_to_check.insert(next_left_pos);
+            }
+            TileTask2::BoxRight => {
+                boxes_to_check.insert(&next_left_pos + Direction::Left);
+            }
+            TileTask2::Wall => return None,
+            TileTask2::Floor => {}
+        };
+        next_left_pos += Direction::Right;
+        match warehouse.get(&next_left_pos) {
+            TileTask2::BoxLeft => {
+                boxes_to_check.insert(next_left_pos);
+            }
+            TileTask2::BoxRight => {
+                boxes_to_check.insert(&next_left_pos + Direction::Left);
+            }
+            TileTask2::Wall => return None,
+            TileTask2::Floor => {}
+        };
+    }
+    Some(boxes_to_check)
 }
 
 fn can_move_box(warehouse: &Warehouse<TileTask2>, left_corner: &Point, d: &Direction) -> bool {
@@ -323,28 +387,15 @@ fn can_move_box(warehouse: &Warehouse<TileTask2>, left_corner: &Point, d: &Direc
             *warehouse.get(&find) != TileTask2::Wall
         }
         Direction::Top | Direction::Bottom => {
-            let movement = d.into();
-            let next_left_pos = &movement + left_corner;
-            let can_move_left_side = match warehouse.get(&next_left_pos) {
-                TileTask2::BoxLeft => can_move_box(warehouse, &next_left_pos, d),
-                TileTask2::BoxRight => {
-                    can_move_box(warehouse, &(&next_left_pos + Direction::Left), d)
+            let mut boxes = FxHashSet::default();
+            boxes.insert(*left_corner);
+            while let Some(next) = get_next_boxes_to_check(warehouse, &boxes, d) {
+                if next.is_empty() {
+                    return true;
                 }
-                TileTask2::Wall => false,
-                TileTask2::Floor => true,
-            };
-            if !can_move_left_side {
-                return false;
+                boxes = next;
             }
-            let next_right_pos = &next_left_pos + Direction::Right;
-            match warehouse.get(&next_right_pos) {
-                TileTask2::BoxLeft => can_move_box(warehouse, &next_left_pos, d),
-                TileTask2::BoxRight => {
-                    can_move_box(warehouse, &(&next_left_pos + Direction::Left), d)
-                }
-                TileTask2::Wall => false,
-                TileTask2::Floor => true,
-            }
+            false
         }
     }
 }
@@ -352,44 +403,46 @@ fn can_move_box(warehouse: &Warehouse<TileTask2>, left_corner: &Point, d: &Direc
 fn move_box(warehouse: &mut Warehouse<TileTask2>, left_corner: &Point, d: &Direction) {
     match d {
         Direction::Left | Direction::Right => {
-            if *d == Direction::Left {
-                warehouse.set(left_corner + Direction::Right, TileTask2::BoxRight);
-            }
-            let mut prev = *warehouse.get(left_corner);
+            let first = if *d == Direction::Left {
+                left_corner + Direction::Right
+            } else {
+                *left_corner
+            };
+            let mut prev = warehouse.get(&first).clone();
             let movement = d.into();
-            let mut find = left_corner + &movement;
+            let mut find = &first + &movement;
             while *warehouse.get(&find) != TileTask2::Floor {
                 std::mem::swap(&mut prev, warehouse.get_mut(&find));
                 find += &movement;
             }
             warehouse.set(&find, prev);
+            warehouse.set(&first, TileTask2::Floor);
         }
         Direction::Top | Direction::Bottom => {
-            // TODO
-            let movement = d.into();
-            let next_left_pos = &movement + left_corner;
-            let can_move_left_side = match warehouse.get(&next_left_pos) {
-                TileTask2::BoxLeft => can_move_box(warehouse, &next_left_pos, d),
-                TileTask2::BoxRight => {
-                    can_move_box(warehouse, &(&next_left_pos + Direction::Left), d)
+            let mut box_layers = vec![];
+            let mut boxes = FxHashSet::default();
+            boxes.insert(*left_corner);
+            box_layers.push(boxes);
+            while let Some(next) = get_next_boxes_to_check(warehouse, box_layers.last().unwrap(), d)
+            {
+                if next.is_empty() {
+                    break;
                 }
-                TileTask2::Wall => false,
-                TileTask2::Floor => true,
-            };
-            if !can_move_left_side {
-                return false;
+                box_layers.push(next);
             }
-            let next_right_pos = &next_left_pos + Direction::Right;
-            match warehouse.get(&next_right_pos) {
-                TileTask2::BoxLeft => can_move_box(warehouse, &next_left_pos, d),
-                TileTask2::BoxRight => {
-                    can_move_box(warehouse, &(&next_left_pos + Direction::Left), d)
-                }
-                TileTask2::Wall => false,
-                TileTask2::Floor => true,
-            }
+            box_layers.into_iter().rev().for_each(|layer| {
+                layer.into_iter().for_each(|box_l| {
+                    warehouse.swap(&box_l, &(&box_l + d));
+                    warehouse.swap(
+                        &(&box_l + Direction::Right),
+                        &(&(&box_l + d) + Direction::Right),
+                    );
+                });
+            });
         }
     }
+    warehouse.robot += &d.into();
+    warehouse.set_robot(TileTask2::Floor);
 }
 
 pub fn task_2(file: &str) -> String {
