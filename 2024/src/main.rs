@@ -3,7 +3,7 @@ use std::array::IntoIter;
 use aoc_2024::utils::{get_input, get_sample_input, measure_elapsed};
 use clap::{Parser, ValueEnum};
 
-const AOC_PROBLEM_NO: usize = 15;
+const AOC_PROBLEM_NO: usize = 16;
 
 fn main() {
     let args = Args::parse();
@@ -142,6 +142,10 @@ fn get_all_solution_fns() -> IntoIter<TaskFns, AOC_PROBLEM_NO> {
         TaskFns {
             task_1: Box::new(aoc_2024::day_15::task_1),
             task_2: Box::new(aoc_2024::day_15::task_2),
+        },
+        TaskFns {
+            task_1: Box::new(aoc_2024::day_16::task_1),
+            task_2: Box::new(aoc_2024::day_16::task_2),
         },
     ]
     .into_iter()
