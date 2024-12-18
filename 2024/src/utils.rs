@@ -10,7 +10,6 @@ fn get_in(mod_name: &str, file_name: &str) -> String {
     file_path.push("src");
     file_path.push(mod_name);
     file_path.push(format!("{file_name}.txt"));
-    println!("{file_path:?}");
     std::fs::read_to_string(file_path).unwrap()
 }
 
