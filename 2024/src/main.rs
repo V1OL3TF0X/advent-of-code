@@ -167,10 +167,13 @@ fn get_all_solution_fns() -> IntoIter<TaskFns, AOC_PROBLEM_NO> {
             task_1: Box::new(aoc_2024::day_21::task_1),
             task_2: Box::new(aoc_2024::day_21::task_2),
         },
+<<<<<<< HEAD
         TaskFns {
             task_1: Box::new(aoc_2024::day_22::task_1),
             task_2: Box::new(aoc_2024::day_22::task_2),
         },
+=======
+>>>>>>> ecbfd43 (Day 21 both tasks)
     ]
     .into_iter()
 }
