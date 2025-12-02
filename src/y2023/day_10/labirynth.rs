@@ -1,4 +1,4 @@
-use std::{fmt::Debug, marker::PhantomData, slice::Iter};
+use std::{fmt::Debug, marker::PhantomData, ops::Index, slice::Iter};
 pub struct Labirynth {
     map: Vec<Vec<Pipe>>,
     start: (usize, usize),
@@ -72,7 +72,7 @@ impl Labirynth {
             _marker: PhantomData,
         }
     }
-    pub fn lines(&self) -> Iter<Vec<Pipe>> {
+    pub fn lines(&self) -> Iter<'_, Vec<Pipe>> {
         self.map.iter()
     }
 }
@@ -91,8 +91,9 @@ impl<'l> Iterator for LabirynthMutIter<'l> {
         let (x, y) = self.direction?;
         self.current = (self.current.0 + x, self.current.1 + y);
         unsafe {
-            let current_pipe =
-                &(*self.labirynth).map[self.current.1 as usize][self.current.0 as usize];
+            let current_pipe: &Pipe = (&(*self.labirynth).map)
+                .index(self.current.1 as usize)
+                .index(self.current.0 as usize);
             self.direction = if let Pipe::Start(_) = current_pipe {
                 None
             } else {
@@ -100,8 +101,7 @@ impl<'l> Iterator for LabirynthMutIter<'l> {
             };
             // safety -> we get each item only once
             Some(
-                (*self.labirynth)
-                    .map
+                (&mut (*self.labirynth).map)
                     .get_unchecked_mut(self.current.1 as usize)
                     .get_unchecked_mut(self.current.0 as usize),
             )

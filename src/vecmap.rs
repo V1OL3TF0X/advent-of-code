@@ -15,7 +15,7 @@ impl<K: Eq, V> VecMap<K, V> {
     pub fn find(&self, key: K) -> Option<&V> {
         self.map.iter().find(|v| v.0 == key).map(|v| &v.1)
     }
-    pub fn entries(&self) -> Iter<(K, V)> {
+    pub fn entries(&self) -> Iter<'_, (K, V)> {
         self.map.iter()
     }
     pub fn find_mut(&mut self, key: &K) -> Option<&mut (K, V)> {
