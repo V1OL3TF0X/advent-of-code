@@ -13,7 +13,7 @@ mod day_1;
 // pub mod day_17;
 // pub mod day_18;
 // pub mod day_19;
-// pub mod day_2;
+mod day_2;
 // pub mod day_20;
 // pub mod day_21;
 // pub mod day_22;
@@ -27,7 +27,7 @@ mod day_1;
 pub const TASKS: Lazy<Vec<TaskFns>> = Lazy::new(|| {
     vec![
         TaskFns::new(Box::new(day_1::task_1), Box::new(day_1::task_2)),
-        //        TaskFns::new(Box::new(day_2::task_1), Box::new(day_2::task_2)),
+        TaskFns::new(Box::new(day_2::task_1), Box::new(day_2::task_2)),
         //        TaskFns::new(Box::new(day_3::task_1), Box::new(day_3::task_2)),
         //        TaskFns::new(Box::new(day_4::task_1), Box::new(day_4::task_2)),
         //        TaskFns::new(Box::new(day_5::task_1), Box::new(day_5::task_2)),
