@@ -1,10 +1,19 @@
-use crate::trie::Trie;
+use crate::{task_fns::TaskFns, trie::Trie};
 use once_cell::sync::Lazy;
-pub fn task_1(file: &str) -> String {
-    let sum: u32 = file.lines().map(combine_first_last_digit).sum();
-    sum.to_string()
-}
+pub struct Solution;
+impl TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let sum: u32 = file.lines().map(combine_first_last_digit).sum();
+        sum.to_string()
+    }
 
+    fn task_2(&self, file: &str) -> String {
+        file.lines()
+            .map(find_first_last_digit_or_word)
+            .sum::<u32>()
+            .to_string()
+    }
+}
 fn combine_first_last_digit(line: &str) -> u32 {
     let first = line
         .chars()
@@ -47,13 +56,6 @@ static REV_NUMBER_TRIE: Lazy<Trie<u32>> = Lazy::new(|| {
         ("enin", 9),
     ])
 });
-
-pub fn task_2(file: &str) -> String {
-    file.lines()
-        .map(find_first_last_digit_or_word)
-        .sum::<u32>()
-        .to_string()
-}
 
 fn find_first_last_digit_or_word(line: &str) -> u32 {
     let first = find_first(line.chars(), &NUMBER_TRIE);

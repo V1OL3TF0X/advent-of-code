@@ -29,13 +29,16 @@ fn make_possible_iter(file: &str) -> impl Iterator<Item = u64> + '_ {
         .map(move |model| ways_is_possible_to_make(&available_patterns, model, &mut cache))
 }
 
-pub fn task_1(file: &str) -> String {
-    make_possible_iter(file)
-        .filter(|ways_to_make| *ways_to_make > 0)
-        .count()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        make_possible_iter(file)
+            .filter(|ways_to_make| *ways_to_make > 0)
+            .count()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    make_possible_iter(file).sum::<u64>().to_string()
+    fn task_2(&self, file: &str) -> String {
+        make_possible_iter(file).sum::<u64>().to_string()
+    }
 }

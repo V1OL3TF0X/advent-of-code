@@ -68,10 +68,14 @@ where
         .to_string()
 }
 
-pub fn task_1(file: &str) -> String {
-    solve::<HashSet<_>>(file)
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        solve::<HashSet<_>>(file)
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        solve::<Vec<_>>(file)
+    }
 }
 
-pub fn task_2(file: &str) -> String {
-    solve::<Vec<_>>(file)
-}

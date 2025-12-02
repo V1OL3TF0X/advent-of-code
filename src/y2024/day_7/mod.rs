@@ -150,24 +150,27 @@ impl<'a, Op: OperationChain> Iterator for EquationIter<'a, Op> {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    file.lines()
-        .flat_map(Equation::from_str)
-        .filter_map(|e| {
-            e.iter::<OperationTask1>()
-                .find(|potential_sum| *potential_sum == e.sum)
-        })
-        .sum::<u64>()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        file.lines()
+            .flat_map(Equation::from_str)
+            .filter_map(|e| {
+                e.iter::<OperationTask1>()
+                    .find(|potential_sum| *potential_sum == e.sum)
+            })
+            .sum::<u64>()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    file.lines()
-        .flat_map(Equation::from_str)
-        .filter_map(|e| {
-            e.iter::<OperationTask2>()
-                .find(|potential_sum| *potential_sum == e.sum)
-        })
-        .sum::<u64>()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        file.lines()
+            .flat_map(Equation::from_str)
+            .filter_map(|e| {
+                e.iter::<OperationTask2>()
+                    .find(|potential_sum| *potential_sum == e.sum)
+            })
+            .sum::<u64>()
+            .to_string()
+    }
 }

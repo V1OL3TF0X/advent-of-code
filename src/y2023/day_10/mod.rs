@@ -1,32 +1,36 @@
 mod labirynth;
 use labirynth::{Labirynth, Pipe};
-pub fn task_1(file: &str) -> String {
-    (parse_input(file).into_iter().count() as f64 / 2.0)
-        .floor()
-        .to_string()
-}
 
-pub fn task_2(file: &str) -> String {
-    let mut lab = parse_input(file);
-    lab.iter_mut()
-        .for_each(|p| *p = Pipe::LabirynthPart(Box::new(p.clone())));
-    lab.lines()
-        .map(|l| {
-            let mut lab_parts = 0;
-            let mut edge_start = &Pipe::Ground;
-            l.iter().fold(0, |mut inside, p| {
-                if let Pipe::LabirynthPart(inner) = p {
-                    decide(inner, &mut edge_start, &mut lab_parts);
-                    return inside;
-                }
-                if lab_parts % 2 != 0 {
-                    inside += 1
-                }
-                inside
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        (parse_input(file).into_iter().count() as f64 / 2.0)
+            .floor()
+            .to_string()
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        let mut lab = parse_input(file);
+        lab.iter_mut()
+            .for_each(|p| *p = Pipe::LabirynthPart(Box::new(p.clone())));
+        lab.lines()
+            .map(|l| {
+                let mut lab_parts = 0;
+                let mut edge_start = &Pipe::Ground;
+                l.iter().fold(0, |mut inside, p| {
+                    if let Pipe::LabirynthPart(inner) = p {
+                        decide(inner, &mut edge_start, &mut lab_parts);
+                        return inside;
+                    }
+                    if lab_parts % 2 != 0 {
+                        inside += 1
+                    }
+                    inside
+                })
             })
-        })
-        .sum::<usize>()
-        .to_string()
+            .sum::<usize>()
+            .to_string()
+    }
 }
 
 fn parse_input(file: &str) -> Labirynth {
@@ -83,7 +87,8 @@ fn decide(pipe: &Pipe, edge_start: &mut &Pipe, lab_parts: &mut usize) {
 
 #[cfg(test)]
 mod tests {
-    use crate::day_10::task_2;
+    use super::Solution;
+    use crate::task_fns::TaskFns;
 
     #[test]
     fn pt_2_0() {
@@ -97,7 +102,7 @@ L---JF-JLJ.||-FJLJJ7
 7-L-JL7||F7|L7F-7F7|
 L.L7LFJ|||||FJL7||LJ
 L7JLJL-JLJLJL--JLJ.L";
-        assert_eq!(task_2(input), "10")
+        assert_eq!(Solution.task_2(input), "10")
     }
     #[test]
     fn pt_2_1() {
@@ -110,7 +115,7 @@ L7JLJL-JLJLJL--JLJ.L";
 .|..|.|..|.
 .L--J.L--J.
 ...........";
-        assert_eq!(task_2(input), "4")
+        assert_eq!(Solution.task_2(input), "4")
     }
     #[test]
     fn pt_2_2() {
@@ -124,7 +129,7 @@ L--J.L7...LJS7F-7L7.
 .....|FJLJ|FJ|F7|.LJ
 ....FJL-7.||.||||...
 ....L---J.LJ.LJLJ...";
-        assert_eq!(task_2(input), "8")
+        assert_eq!(Solution.task_2(input), "8")
     }
 }
 

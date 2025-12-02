@@ -112,49 +112,52 @@ fn extract_value(prefix: &str, values: &mut Values, equations: &Equations<'_>) -
     res
 }
 
-pub fn task_1(file: &str) -> String {
-    let (mut v, eq) = parse(file);
-    extract_value("z", &mut v, &eq).to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let (mut v, eq) = parse(file);
+        extract_value("z", &mut v, &eq).to_string()
+    }
 
-// fixing the Ripple Carry Adder
-pub fn task_2(file: &str) -> String {
-    let (_, equations) = parse::<Vec<_>>(file);
-    let out_num = equations.iter().filter(|(k, _)| k.starts_with("z")).count() - 1;
-    let last = format!("z{out_num:02}");
-    equations
-        .iter()
-        .filter_map(|(out, equation)| {
-            // all nodes that feed directly into the output that are not XOR (except the last one)
-            if ((out.starts_with("z") && *equation.op() != Op::Xor && **out != last)
+    // fixing the Ripple Carry Adder
+    fn task_2(&self, file: &str) -> String {
+        let (_, equations) = parse::<Vec<_>>(file);
+        let out_num = equations.iter().filter(|(k, _)| k.starts_with("z")).count() - 1;
+        let last = format!("z{out_num:02}");
+        equations
+            .iter()
+            .filter_map(|(out, equation)| {
+                // all nodes that feed directly into the output that are not XOR (except the last one)
+                if ((out.starts_with("z") && *equation.op() != Op::Xor && **out != last)
             // or *could* only feed outs, but feed intermediate instead
                 || (*equation.op() == Op::Xor && !out.starts_with("z")))
-                && !equation.contains_start_node()
-            {
-                return Some(out);
-            }
-            // find XORs that are not fed by x00/y00 and feed into something, that is not XOR
-            // (faulty by design of RCA)
-            if *equation.op() == Op::Xor
-                && equation
-                    .inputs()
-                    .filter(|i| !i.ends_with("00"))
-                    .any(is_start_node)
-            {
-                return (equations
-                    .iter()
-                    .all(|(_, e)| *e.op() != Op::Xor || (e.inputs().all(|i| i != *out))))
-                .then_some(out);
-            }
-            // find ANDs that do not feed into ORs
-            // (faulty by design of RCA)
-            (*equation.op() == Op::And
-                && equation.inputs().filter(|&i| i != "x00").any(is_start_node)
-                && equations
-                    .iter()
-                    .all(|(_, e)| *e.op() != Op::Or || (e.inputs().all(|i| i != *out))))
-            .then_some(out)
-        })
-        .sorted()
-        .join(",")
+                    && !equation.contains_start_node()
+                {
+                    return Some(out);
+                }
+                // find XORs that are not fed by x00/y00 and feed into something, that is not XOR
+                // (faulty by design of RCA)
+                if *equation.op() == Op::Xor
+                    && equation
+                        .inputs()
+                        .filter(|i| !i.ends_with("00"))
+                        .any(is_start_node)
+                {
+                    return (equations
+                        .iter()
+                        .all(|(_, e)| *e.op() != Op::Xor || (e.inputs().all(|i| i != *out))))
+                    .then_some(out);
+                }
+                // find ANDs that do not feed into ORs
+                // (faulty by design of RCA)
+                (*equation.op() == Op::And
+                    && equation.inputs().filter(|&i| i != "x00").any(is_start_node)
+                    && equations
+                        .iter()
+                        .all(|(_, e)| *e.op() != Op::Or || (e.inputs().all(|i| i != *out))))
+                .then_some(out)
+            })
+            .sorted()
+            .join(",")
+    }
 }

@@ -1,3 +1,5 @@
+use crate::task_fns::TaskFns;
+
 struct Game {
     id: u32,
     red: u32,
@@ -93,22 +95,24 @@ fn new_value(color: &str, old: u32, new: u32, limit: u32) -> Result<u32, String>
     }
     Ok(if old < new { new } else { old })
 }
+pub struct Solution;
+impl TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let red_limit = 12;
+        let green_limit = 13;
+        let blue_limit = 14;
+        file.lines()
+            .flat_map(|l| Game::try_from((l, red_limit, green_limit, blue_limit)))
+            .map(|g: Game| g.get_id())
+            .sum::<u32>()
+            .to_string()
+    }
 
-pub fn task_1(file: &str) -> String {
-    let red_limit = 12;
-    let green_limit = 13;
-    let blue_limit = 14;
-    file.lines()
-        .flat_map(|l| Game::try_from((l, red_limit, green_limit, blue_limit)))
-        .map(|g: Game| g.get_id())
-        .sum::<u32>()
-        .to_string()
-}
-
-pub fn task_2(file: &str) -> String {
-    file.lines()
-        .map(Game::from)
-        .map(|g: Game| g.get_power())
-        .sum::<u32>()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        file.lines()
+            .map(Game::from)
+            .map(|g: Game| g.get_power())
+            .sum::<u32>()
+            .to_string()
+    }
 }

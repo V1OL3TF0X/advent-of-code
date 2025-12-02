@@ -135,60 +135,63 @@ impl Table {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    let mut table = Table::from_str(file);
-    let mut path_count = 0;
-    table.walk(
-        |t| {
-            if t.get_cell(&t.guard_pos) != 'X' {
-                path_count += 1;
-            }
-        },
-        |_, _| true,
-    );
-    path_count.to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let mut table = Table::from_str(file);
+        let mut path_count = 0;
+        table.walk(
+            |t| {
+                if t.get_cell(&t.guard_pos) != 'X' {
+                    path_count += 1;
+                }
+            },
+            |_, _| true,
+        );
+        path_count.to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    let mut table = Table::from_str(file);
-    let mut walked_pos = vec![];
-    *table.get_guard_cell_mut() = 'X';
-    table.walk(
-        |t| {
-            if t.get_cell(&t.guard_pos) != 'X' {
-                walked_pos.push(t.guard_pos);
-            }
-        },
-        |_, _| true,
-    );
-    let mut found = HashSet::new();
-    walked_pos
-        .into_iter()
-        .filter(|potential_obstruction| {
-            if found.contains(potential_obstruction) {
-                return false;
-            }
-            table.reset();
-            *table.get_cell_mut(potential_obstruction) = '#';
-            let mut is_in_loop = false;
-            let mut obstructions = HashSet::new();
-            table.walk(
-                |_| {},
-                |bumped_obstruction, bump_from| {
-                    if obstructions.insert((bumped_obstruction, bump_from)) {
-                        true
-                    } else {
-                        is_in_loop = true;
-                        false
-                    }
-                },
-            );
-            *table.get_cell_mut(potential_obstruction) = '.';
-            if is_in_loop {
-                found.insert(*potential_obstruction);
-            }
-            is_in_loop
-        })
-        .count()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        let mut table = Table::from_str(file);
+        let mut walked_pos = vec![];
+        *table.get_guard_cell_mut() = 'X';
+        table.walk(
+            |t| {
+                if t.get_cell(&t.guard_pos) != 'X' {
+                    walked_pos.push(t.guard_pos);
+                }
+            },
+            |_, _| true,
+        );
+        let mut found = HashSet::new();
+        walked_pos
+            .into_iter()
+            .filter(|potential_obstruction| {
+                if found.contains(potential_obstruction) {
+                    return false;
+                }
+                table.reset();
+                *table.get_cell_mut(potential_obstruction) = '#';
+                let mut is_in_loop = false;
+                let mut obstructions = HashSet::new();
+                table.walk(
+                    |_| {},
+                    |bumped_obstruction, bump_from| {
+                        if obstructions.insert((bumped_obstruction, bump_from)) {
+                            true
+                        } else {
+                            is_in_loop = true;
+                            false
+                        }
+                    },
+                );
+                *table.get_cell_mut(potential_obstruction) = '.';
+                if is_in_loop {
+                    found.insert(*potential_obstruction);
+                }
+                is_in_loop
+            })
+            .count()
+            .to_string()
+    }
 }

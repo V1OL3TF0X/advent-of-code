@@ -174,8 +174,15 @@ where
     warehouse.sum_of_gps().to_string()
 }
 
-pub fn task_1(file: &str) -> String {
-    solve::<TileTask1>(file)
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        solve::<TileTask1>(file)
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        solve::<TileTask2>(file)
+    }
 }
 
 #[derive(PartialEq, Eq, Clone, Default)]
@@ -349,8 +356,4 @@ fn move_box(warehouse: &mut Warehouse<TileTask2>, left_corner: &Point, d: &Direc
     }
     warehouse.robot += &d.into();
     warehouse.set_robot(TileTask2::Floor);
-}
-
-pub fn task_2(file: &str) -> String {
-    solve::<TileTask2>(file)
 }

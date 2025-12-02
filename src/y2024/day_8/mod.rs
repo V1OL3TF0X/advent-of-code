@@ -251,18 +251,21 @@ impl Antennas {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    Antennas::from_str(file)
-        .unwrap()
-        .get_antinodes_1()
-        .len()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        Antennas::from_str(file)
+            .unwrap()
+            .get_antinodes_1()
+            .len()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    Antennas::from_str(file)
-        .unwrap()
-        .get_antinodes_2()
-        .len()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        Antennas::from_str(file)
+            .unwrap()
+            .get_antinodes_2()
+            .len()
+            .to_string()
+    }
 }

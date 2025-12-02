@@ -20,21 +20,23 @@ fn solve(stone: u64, blinks: u32, cache: &mut FxHashMap<(u64, u32), usize>) -> u
     cache.insert((stone, blinks), c);
     c
 }
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let mut cache = FxHashMap::default();
+        file.split_whitespace()
+            .map(|c| c.parse::<u64>().unwrap())
+            .map(|s| solve(s, 25, &mut cache))
+            .sum::<usize>()
+            .to_string()
+    }
 
-pub fn task_1(file: &str) -> String {
-    let mut cache = FxHashMap::default();
-    file.split_whitespace()
-        .map(|c| c.parse::<u64>().unwrap())
-        .map(|s| solve(s, 25, &mut cache))
-        .sum::<usize>()
-        .to_string()
-}
-
-pub fn task_2(file: &str) -> String {
-    let mut cache = FxHashMap::default();
-    file.split_whitespace()
-        .map(|c| c.parse::<u64>().unwrap())
-        .map(|s| solve(s, 75, &mut cache))
-        .sum::<usize>()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        let mut cache = FxHashMap::default();
+        file.split_whitespace()
+            .map(|c| c.parse::<u64>().unwrap())
+            .map(|s| solve(s, 75, &mut cache))
+            .sum::<usize>()
+            .to_string()
+    }
 }

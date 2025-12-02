@@ -59,26 +59,29 @@ fn bron_kerbosh<'a>(
     cliques
 }
 
-pub fn task_1(file: &str) -> String {
-    let mut three_interconnected = FxHashSet::default();
-    let connections = get_computer_connections(file);
-    connections.iter().for_each(|(from, to_list)| {
-        to_list.iter().tuple_combinations().for_each(|(a, b)| {
-            if connections.get(a).is_some_and(|a_list| a_list.contains(b)) {
-                let mut key = [from, a, b];
-                key.sort_unstable();
-                three_interconnected.insert(key);
-            }
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let mut three_interconnected = FxHashSet::default();
+        let connections = get_computer_connections(file);
+        connections.iter().for_each(|(from, to_list)| {
+            to_list.iter().tuple_combinations().for_each(|(a, b)| {
+                if connections.get(a).is_some_and(|a_list| a_list.contains(b)) {
+                    let mut key = [from, a, b];
+                    key.sort_unstable();
+                    three_interconnected.insert(key);
+                }
+            });
         });
-    });
 
-    three_interconnected
-        .into_iter()
-        .filter(|k| k.iter().any(|c| c.starts_with('t')))
-        .count()
-        .to_string()
-}
+        three_interconnected
+            .into_iter()
+            .filter(|k| k.iter().any(|c| c.starts_with('t')))
+            .count()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    max_clique(&mut get_computer_connections(file)).join(",")
+    fn task_2(&self, file: &str) -> String {
+        max_clique(&mut get_computer_connections(file)).join(",")
+    }
 }

@@ -1,12 +1,15 @@
 mod task_1;
 mod task_2;
 
-use crate::vecmap::VecMap;
-pub fn task_1(file: &str) -> String {
-    solve::<task_1::Task1>(file)
-}
-pub fn task_2(file: &str) -> String {
-    solve::<task_2::Task2>(file)
+use crate::{task_fns::TaskFns, vecmap::VecMap};
+pub struct Solution;
+impl TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        solve::<task_1::Task1>(file)
+    }
+    fn task_2(&self, file: &str) -> String {
+        solve::<task_2::Task2>(file)
+    }
 }
 
 fn solve<V: MakePlayer>(file: &str) -> String {

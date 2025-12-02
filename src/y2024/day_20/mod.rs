@@ -79,21 +79,24 @@ impl Racetrack {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    Racetrack::from_str(file)
-        .unwrap()
-        .find_cheats_in_rad(2, 100)
-        .into_iter()
-        .filter_map(|(size, count)| (size >= 100).then_some(count))
-        .sum::<usize>()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        Racetrack::from_str(file)
+            .unwrap()
+            .find_cheats_in_rad(2, 100)
+            .into_iter()
+            .filter_map(|(size, count)| (size >= 100).then_some(count))
+            .sum::<usize>()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    Racetrack::from_str(file)
-        .unwrap()
-        .find_cheats_in_rad(20, 100)
-        .into_values()
-        .sum::<usize>()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        Racetrack::from_str(file)
+            .unwrap()
+            .find_cheats_in_rad(20, 100)
+            .into_values()
+            .sum::<usize>()
+            .to_string()
+    }
 }

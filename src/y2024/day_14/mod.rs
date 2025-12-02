@@ -53,28 +53,59 @@ fn n(num: &str) -> i64 {
     num.parse().unwrap()
 }
 
-pub fn task_1(file: &str) -> String {
-    let robot_regex = Regex::new(ROBOT_REGEX_STR).unwrap();
-    let mut lines = file.lines();
-    let (width, height) = lines
-        .next()
-        .unwrap()
-        .split_once(' ')
-        .map(|(w, h)| (w.parse().unwrap(), h.parse().unwrap()))
-        .unwrap();
-    lines
-        .fold(Bathroom::new(width, height), |bathroom, l| {
-            let cap = robot_regex.captures(l).unwrap();
-            bathroom.insert_after_sec(
-                n(&cap["px"]),
-                n(&cap["py"]),
-                n(&cap["vx"]),
-                n(&cap["vy"]),
-                100,
-            )
-        })
-        .safety_factor()
-        .to_string()
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let robot_regex = Regex::new(ROBOT_REGEX_STR).unwrap();
+        let mut lines = file.lines();
+        let (width, height) = lines
+            .next()
+            .unwrap()
+            .split_once(' ')
+            .map(|(w, h)| (w.parse().unwrap(), h.parse().unwrap()))
+            .unwrap();
+        lines
+            .fold(Bathroom::new(width, height), |bathroom, l| {
+                let cap = robot_regex.captures(l).unwrap();
+                bathroom.insert_after_sec(
+                    n(&cap["px"]),
+                    n(&cap["py"]),
+                    n(&cap["vx"]),
+                    n(&cap["vy"]),
+                    100,
+                )
+            })
+            .safety_factor()
+            .to_string()
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        let robot_regex = Regex::new(ROBOT_REGEX_STR).unwrap();
+        let mut lines = file.lines();
+        let (width, height) = lines
+            .next()
+            .unwrap()
+            .split_once(' ')
+            .map(|(w, h)| (w.parse().unwrap(), h.parse().unwrap()))
+            .unwrap();
+        let mut bs = BathroomSnapshot::new(
+            width,
+            height,
+            lines.map(|l| {
+                let cap = robot_regex.captures(l).unwrap();
+                (n(&cap["px"]), n(&cap["py"]), n(&cap["vx"]), n(&cap["vy"]))
+            }),
+        );
+        let mut i = 0;
+        loop {
+            println!("{bs:?}");
+            if bs.robots.values().all(|v| v.len() == 1) {
+                return i.to_string();
+            }
+            i += 1;
+            bs.progress();
+        }
+    }
 }
 
 struct BathroomSnapshot {
@@ -141,33 +172,5 @@ impl Debug for BathroomSnapshot {
             writeln!(f)?;
         }
         Ok(())
-    }
-}
-
-pub fn task_2(file: &str) -> String {
-    let robot_regex = Regex::new(ROBOT_REGEX_STR).unwrap();
-    let mut lines = file.lines();
-    let (width, height) = lines
-        .next()
-        .unwrap()
-        .split_once(' ')
-        .map(|(w, h)| (w.parse().unwrap(), h.parse().unwrap()))
-        .unwrap();
-    let mut bs = BathroomSnapshot::new(
-        width,
-        height,
-        lines.map(|l| {
-            let cap = robot_regex.captures(l).unwrap();
-            (n(&cap["px"]), n(&cap["py"]), n(&cap["vx"]), n(&cap["vy"]))
-        }),
-    );
-    let mut i = 0;
-    loop {
-        println!("{bs:?}");
-        if bs.robots.values().all(|v| v.len() == 1) {
-            return i.to_string();
-        }
-        i += 1;
-        bs.progress();
     }
 }

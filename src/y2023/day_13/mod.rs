@@ -1,7 +1,14 @@
 use std::{fmt::Debug, slice::Iter, str::Lines};
 
-pub fn task_1(file: &str) -> String {
-    solve(file, 0)
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        solve(file, 0)
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        solve(file, 1)
+    }
 }
 
 fn solve(file: &str, max_diff: usize) -> String {
@@ -57,10 +64,6 @@ fn solve(file: &str, max_diff: usize) -> String {
             reflections + sum
         })
         .to_string()
-}
-
-pub fn task_2(file: &str) -> String {
-    solve(file, 1)
 }
 
 fn parse_input(input: &str) -> Vec<Pattern> {

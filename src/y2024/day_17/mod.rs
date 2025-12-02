@@ -129,13 +129,16 @@ impl Computer {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    format!("{:?}", Computer::from_str(file).unwrap().run())
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        format!("{:?}", Computer::from_str(file).unwrap().run())
+    }
 
-pub fn task_2(file: &str) -> String {
-    Computer::from_str(file)
-        .unwrap()
-        .find_min_self()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        Computer::from_str(file)
+            .unwrap()
+            .find_min_self()
+            .to_string()
+    }
 }

@@ -25,17 +25,20 @@ fn get_locks_and_keys(file: &str) -> (Vec<Vec<u8>>, Vec<Vec<u8>>, u8) {
     (locks, keys, (height - 1) as u8)
 }
 
-pub fn task_1(file: &str) -> String {
-    let (locks, keys, height) = get_locks_and_keys(file);
-    println!("{locks:?}\n{keys:?}\n height: {height}");
-    locks
-        .iter()
-        .cartesian_product(keys.iter())
-        .filter(|(l, k)| l.iter().zip(k.iter()).all(|(a, b)| a + b <= height))
-        .count()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let (locks, keys, height) = get_locks_and_keys(file);
+        println!("{locks:?}\n{keys:?}\n height: {height}");
+        locks
+            .iter()
+            .cartesian_product(keys.iter())
+            .filter(|(l, k)| l.iter().zip(k.iter()).all(|(a, b)| a + b <= height))
+            .count()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    todo!("{file}")
+    fn task_2(&self, file: &str) -> String {
+        todo!("{file}")
+    }
 }

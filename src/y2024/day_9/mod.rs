@@ -12,10 +12,6 @@ impl Section {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    solve(file, compress_task_1)
-}
-
 fn compress_task_1(mut files: Vec<Section>, gaps: Vec<u64>) -> Vec<Section> {
     let mut i = 0;
     let mut compressed = vec![];
@@ -42,9 +38,17 @@ fn compress_task_1(mut files: Vec<Section>, gaps: Vec<u64>) -> Vec<Section> {
     compressed
 }
 
-pub fn task_2(file: &str) -> String {
-    solve(file, compress_task_2)
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        solve(file, compress_task_1)
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        solve(file, compress_task_2)
+    }
 }
+
 const GAP_FILE_NO: u64 = u64::MAX;
 fn compress_task_2(files: Vec<Section>, gaps: Vec<u64>) -> Vec<Section> {
     let mut compressed = files

@@ -1,8 +1,8 @@
 use core::{panic, str};
-use std::str::FromStr;
+use std::{fmt::Display, str::FromStr};
 
 use aoc::{
-    task_fns::{Task, TaskFns},
+    task_fns::{Task, TasksDefinition},
     utils::{get_input, get_sample_input},
     y2023, y2024, y2025,
 };
@@ -10,8 +10,8 @@ use chrono::{Datelike, Local};
 use clap::Parser;
 use once_cell::sync::Lazy;
 
-const SOLUTIONS_BY_YEAR: Lazy<[Lazy<Vec<TaskFns>>; 3]> =
-    Lazy::new(|| -> [Lazy<Vec<_>>; 3] { [y2023::TASKS, y2024::TASKS, y2025::TASKS] });
+const SOLUTIONS_BY_YEAR: Lazy<[TasksDefinition; 3]> =
+    Lazy::new(|| -> [TasksDefinition; 3] { [y2023::TASKS, y2024::TASKS, y2025::TASKS] });
 
 fn main() {
     let args = Args::parse();
@@ -85,12 +85,16 @@ enum AoCDay {
     One(usize),
 }
 
-impl ToString for AoCDay {
-    fn to_string(&self) -> String {
-        match self {
-            AoCDay::All => "all".to_string(),
-            AoCDay::One(v) => v.to_string(),
-        }
+impl Display for AoCDay {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                AoCDay::All => "all".to_string(),
+                AoCDay::One(v) => v.to_string(),
+            }
+        )
     }
 }
 

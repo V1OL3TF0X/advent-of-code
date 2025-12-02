@@ -185,10 +185,13 @@ fn solve(file: &str, depth: usize) -> String {
         .to_string()
 }
 
-pub fn task_1(file: &str) -> String {
-    solve(file, 2)
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        solve(file, 2)
+    }
 
-pub fn task_2(file: &str) -> String {
-    solve(file, 25)
+    fn task_2(&self, file: &str) -> String {
+        solve(file, 25)
+    }
 }

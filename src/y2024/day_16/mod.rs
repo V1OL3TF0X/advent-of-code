@@ -134,16 +134,19 @@ impl FromStr for Labitynth {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    Labitynth::from_str(file)
-        .unwrap()
-        .solve_dijkstra()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        Labitynth::from_str(file)
+            .unwrap()
+            .solve_dijkstra()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    Labitynth::from_str(file)
-        .unwrap()
-        .solve_all_shortest()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        Labitynth::from_str(file)
+            .unwrap()
+            .solve_all_shortest()
+            .to_string()
+    }
 }

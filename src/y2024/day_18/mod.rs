@@ -106,20 +106,23 @@ impl Ram {
     }
 }
 
-pub fn task_1(file: &str) -> String {
-    Ram::from_file(file, None)
-        .unwrap()
-        .find_path_length()
-        .unwrap()
-        .to_string()
-}
-
-pub fn task_2(file: &str) -> String {
-    let mut ram = Ram::from_file(file, None).unwrap();
-    while ram.find_path_length().is_some() {
-        ram.make_step();
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        Ram::from_file(file, None)
+            .unwrap()
+            .find_path_length()
+            .unwrap()
+            .to_string()
     }
 
-    let blocking = ram.corrupted[ram.steps];
-    format!("{},{}", blocking.0, blocking.1)
+    fn task_2(&self, file: &str) -> String {
+        let mut ram = Ram::from_file(file, None).unwrap();
+        while ram.find_path_length().is_some() {
+            ram.make_step();
+        }
+
+        let blocking = ram.corrupted[ram.steps];
+        format!("{},{}", blocking.0, blocking.1)
+    }
 }

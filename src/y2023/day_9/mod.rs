@@ -1,19 +1,22 @@
 use crate::utils::to_nums;
 
-pub fn task_1(file: &str) -> String {
-    file.lines()
-        .map(to_nums)
-        .map(get_next_in_seq)
-        .sum::<isize>()
-        .to_string()
-}
+pub struct Solution;
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        file.lines()
+            .map(to_nums)
+            .map(get_next_in_seq)
+            .sum::<isize>()
+            .to_string()
+    }
 
-pub fn task_2(file: &str) -> String {
-    file.lines()
-        .map(to_nums)
-        .map(get_prev_in_seq)
-        .sum::<isize>()
-        .to_string()
+    fn task_2(&self, file: &str) -> String {
+        file.lines()
+            .map(to_nums)
+            .map(get_prev_in_seq)
+            .sum::<isize>()
+            .to_string()
+    }
 }
 
 fn get_next_in_seq(mut nums: Vec<isize>) -> isize {

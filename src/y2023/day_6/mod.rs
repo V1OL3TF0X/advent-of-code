@@ -1,22 +1,27 @@
 use std::str::{Lines, SplitWhitespace};
 
-pub fn task_1(file: &str) -> String {
-    let (time_values, dist_values) = get_time_and_dist_values(file);
-    let time_values = time_values.map(|n| n.parse::<u64>().expect(n));
-    let dist_values = dist_values.map(|n| n.parse::<u64>().expect(n));
-    time_values
-        .zip(dist_values)
-        .map(Race::from)
-        .map(Race::into_run_count)
-        .product::<u64>()
-        .to_string()
-}
+use crate::task_fns::TaskFns;
+pub struct Solution;
 
-pub fn task_2(file: &str) -> String {
-    let (time_values, dist_values) = get_time_and_dist_values(file);
-    let time = make_single_num(time_values);
-    let dist = make_single_num(dist_values);
-    Race::new(time, dist).get_record_run_count().to_string()
+impl TaskFns for Solution {
+    fn task_1(&self, file: &str) -> String {
+        let (time_values, dist_values) = get_time_and_dist_values(file);
+        let time_values = time_values.map(|n| n.parse::<u64>().expect(n));
+        let dist_values = dist_values.map(|n| n.parse::<u64>().expect(n));
+        time_values
+            .zip(dist_values)
+            .map(Race::from)
+            .map(Race::into_run_count)
+            .product::<u64>()
+            .to_string()
+    }
+
+    fn task_2(&self, file: &str) -> String {
+        let (time_values, dist_values) = get_time_and_dist_values(file);
+        let time = make_single_num(time_values);
+        let dist = make_single_num(dist_values);
+        Race::new(time, dist).get_record_run_count().to_string()
+    }
 }
 
 fn get_time_and_dist_values(file: &str) -> (SplitWhitespace<'_>, SplitWhitespace<'_>) {
