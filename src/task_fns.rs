@@ -1,7 +1,6 @@
 use clap::ValueEnum;
 use once_cell::sync::Lazy;
 
-pub type TasksDefinition = Lazy<Vec<Box<dyn TaskFns>>>;
 pub trait TaskFns {
     fn task_1(&self, file: &str) -> String;
     fn task_2(&self, file: &str) -> String;

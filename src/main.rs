@@ -2,22 +2,27 @@ use core::{panic, str};
 use std::{fmt::Display, str::FromStr};
 
 use aoc::{
-    task_fns::{Task, TasksDefinition},
+    task_fns::{Task, TaskFns},
     utils::{get_input, get_sample_input},
     y2023, y2024, y2025,
 };
 use chrono::{Datelike, Local};
 use clap::Parser;
-use once_cell::sync::Lazy;
 
-const SOLUTIONS_BY_YEAR: Lazy<[TasksDefinition; 3]> =
-    Lazy::new(|| -> [TasksDefinition; 3] { [y2023::TASKS, y2024::TASKS, y2025::TASKS] });
+fn get_solutions_by_year(year: usize) -> (usize, fn(usize) -> Result<Box<dyn TaskFns>, String>) {
+    match year {
+        2023 => (y2023::MAX_DAY, y2023::get_solution_by_day),
+        2024 => (y2025::MAX_DAY, y2024::get_solution_by_day),
+        2025 => (y2025::MAX_DAY, y2025::get_solution_by_day),
+        other => panic!("no solutions implemented for year {other}"),
+    }
+}
 
 fn main() {
     let args = Args::parse();
-    let task_fns = &SOLUTIONS_BY_YEAR[args.year - 2023];
+    let (solved_task_number, get_task_fns) = get_solutions_by_year(args.year);
     if let AoCDay::One(from) = args.day_from {
-        if from > task_fns.len() {
+        if from > solved_task_number {
             panic!(
                 "Day from cannot be larger than the number of tasks done in year {} ({})",
                 args.year, from
@@ -25,7 +30,7 @@ fn main() {
         }
     }
     if let AoCDay::One(to) = args.day_to {
-        if to > task_fns.len() {
+        if to > solved_task_number {
             panic!(
                 "Day to cannot be larger than the number of tasks done in year {} ({})",
                 args.year, to
@@ -44,18 +49,18 @@ fn main() {
         AoCDay::One(v) => v,
     };
     let day_to = match args.day_to {
-        AoCDay::All => task_fns.len(),
+        AoCDay::All => solved_task_number,
         AoCDay::One(v) => v,
     };
-    task_fns
-        .iter()
-        .enumerate()
+    (1..=solved_task_number)
         .skip(day_from - 1)
         .take(day_to - day_from + 1)
-        .for_each(|(i, t_fns)| {
-            let t_no = i + 1;
-            let file = get_file(args.year, &format!("day_{t_no}"));
-            t_fns.run(&file, args.mode, t_no)
+        .for_each(|day| {
+            let file = get_file(args.year, &format!("day_{day}"));
+            match get_task_fns(day) {
+                Ok(task_fn) => task_fn.run(&file, args.mode, day),
+                Err(err) => println!("{err}"),
+            }
         });
 }
 
