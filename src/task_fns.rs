@@ -1,5 +1,4 @@
 use clap::ValueEnum;
-use once_cell::sync::Lazy;
 
 pub trait TaskFns {
     fn task_1(&self, file: &str) -> String;
