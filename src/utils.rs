@@ -1,4 +1,8 @@
-use std::{fmt::Debug, process::Command, time::Instant};
+use std::{
+    fmt::Debug,
+    process::Command,
+    time::{Duration, Instant},
+};
 
 pub fn get_input(year: usize, mod_name: &str) -> String {
     get_in(year, mod_name, "input")
@@ -16,12 +20,10 @@ pub fn get_sample_input(year: usize, mod_name: &str) -> String {
     get_in(year, mod_name, "sample_input")
 }
 
-pub fn measure_elapsed<T>(f: impl FnOnce() -> T) -> T {
+pub fn measure_elapsed<T>(f: impl FnOnce() -> T) -> (Duration, T) {
     let b = Instant::now();
     let r = f();
-    let el = b.elapsed();
-    print!("Time: {el:.2?} ");
-    r
+    (b.elapsed(), r)
 }
 
 pub fn to_nums<T: std::str::FromStr>(line: &str) -> Vec<T>

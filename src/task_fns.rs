@@ -4,17 +4,14 @@ pub trait TaskFns {
     fn task_1(&self, file: &str) -> String;
     fn task_2(&self, file: &str) -> String;
     fn run(&self, file: &str, mode: Task, day: usize) {
+        println!("Day {day}:");
         let run_t_1 = || {
-            println!(
-                "Day {day}, task 1: {}",
-                crate::utils::measure_elapsed(|| self.task_1(file))
-            );
+            let (dur, res) = crate::utils::measure_elapsed(|| self.task_1(file));
+            println!("    task 1: {res} ({dur:.2?})",);
         };
         let run_t_2 = || {
-            println!(
-                "Day {day}, task 2: {}",
-                crate::utils::measure_elapsed(|| self.task_2(file))
-            );
+            let (dur, res) = crate::utils::measure_elapsed(|| self.task_2(file));
+            println!("    task 2: {res} ({dur:.2?})",);
         };
         match mode {
             Task::Both => {

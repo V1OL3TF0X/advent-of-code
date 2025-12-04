@@ -9,7 +9,7 @@ use aoc::{
 use chrono::{Datelike, Local};
 use clap::Parser;
 
-fn get_solutions_by_year(year: usize) -> (usize, fn(usize) -> Result<Box<dyn TaskFns>, String>) {
+fn get_solutions_by_year(year: usize) -> (usize, fn(&usize) -> Result<&dyn TaskFns, String>) {
     match year {
         2023 => (y2023::MAX_DAY, y2023::get_solution_by_day),
         2024 => (y2025::MAX_DAY, y2024::get_solution_by_day),
@@ -57,7 +57,7 @@ fn main() {
         .take(day_to - day_from + 1)
         .for_each(|day| {
             let file = get_file(args.year, &format!("day_{day}"));
-            match get_task_fns(day) {
+            match get_task_fns(&day) {
                 Ok(task_fn) => task_fn.run(&file, args.mode, day),
                 Err(err) => println!("{err}"),
             }

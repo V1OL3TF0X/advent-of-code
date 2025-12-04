@@ -13,12 +13,12 @@ mod day_4;
 // mod day_8;
 // mod day_9;
 pub const MAX_DAY: usize = 4;
-pub fn get_solution_by_day(day: usize) -> Result<Box<dyn TaskFns>, String> {
+pub fn get_solution_by_day(day: &usize) -> Result<&dyn TaskFns, String> {
     match day {
-        1 => Ok(Box::new(day_1::Solution)),
-        2 => Ok(Box::new(day_2::Solution)),
-        3 => Ok(Box::new(day_3::Solution)),
-        4 => Ok(Box::new(day_4::Solution)),
+        1 => Ok(&day_1::Solution),
+        2 => Ok(&day_2::Solution),
+        3 => Ok(&day_3::Solution),
+        4 => Ok(&day_4::Solution),
         //  5 => Ok(Box::new(day_5::Solution)),
         //  6 => Ok(Box::new(day_6::Solution)),
         //  7 => Ok(Box::new(day_7::Solution)),
