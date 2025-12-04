@@ -1,24 +1,24 @@
 use crate::task_fns::TaskFns;
 
 mod day_1;
-//pub mod day_10;
-// pub mod day_11;
-// pub mod day_12;
+// mod day_10;
+// mod day_11;
+// mod day_12;
 mod day_2;
-pub mod day_3;
-// pub mod day_4;
-// pub mod day_5;
-// pub mod day_6;
-// pub mod day_7;
-// pub mod day_8;
-// pub mod day_9;
-pub const MAX_DAY: usize = 3;
+mod day_3;
+mod day_4;
+// mod day_5;
+// mod day_6;
+// mod day_7;
+// mod day_8;
+// mod day_9;
+pub const MAX_DAY: usize = 4;
 pub fn get_solution_by_day(day: usize) -> Result<Box<dyn TaskFns>, String> {
     match day {
         1 => Ok(Box::new(day_1::Solution)),
         2 => Ok(Box::new(day_2::Solution)),
         3 => Ok(Box::new(day_3::Solution)),
-        //  4 => Ok(Box::new(day_4::Solution)),
+        4 => Ok(Box::new(day_4::Solution)),
         //  5 => Ok(Box::new(day_5::Solution)),
         //  6 => Ok(Box::new(day_6::Solution)),
         //  7 => Ok(Box::new(day_7::Solution)),
