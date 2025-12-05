@@ -32,17 +32,15 @@ impl crate::task_fns::TaskFns for Solution {
 
         db.ranges
             .into_iter()
-            .fold(vec![], |mut fresh, range| {
-                let (indices_to_remove, resulting_range) = fresh
+            .fold(vec![], |mut fresh: Vec<(u128, u128)>, range| {
+                let mut has_intersections = false;
+                let resulting_range = fresh
                     .iter()
-                    .enumerate()
-                    .filter(|(_, target)| intersects(target, &range))
-                    .fold((vec![], range), |(mut index_vec, res), (i, join)| {
-                        index_vec.push(i);
-                        (index_vec, (res.0.min(join.0), res.1.max(join.1)))
-                    });
-                if !indices_to_remove.is_empty() {
-                    fresh = remove_sorted_indices(fresh, indices_to_remove);
+                    .filter(|target| target.intersects(&range))
+                    .inspect(|_| has_intersections = true)
+                    .fold(range, |res, join| (res.0.min(join.0), res.1.max(join.1)));
+                if has_intersections {
+                    fresh.retain(|el| !el.intersects(&range));
                 }
                 fresh.push(resulting_range);
                 fresh
@@ -53,8 +51,14 @@ impl crate::task_fns::TaskFns for Solution {
     }
 }
 
-fn intersects(a: &(u128, u128), b: &(u128, u128)) -> bool {
-    !(b.0 > a.1 || a.0 > b.1)
+trait Intersects {
+    fn intersects(&self, other: &Self) -> bool;
+}
+
+impl Intersects for (u128, u128) {
+    fn intersects(&self, other: &Self) -> bool {
+        !(self.0 > other.1 || other.0 > self.1)
+    }
 }
 
 #[derive(Debug)]
@@ -78,31 +82,4 @@ impl FromStr for Database {
                 .collect::<Result<Vec<_>, &'static str>>()?,
         })
     }
-}
-
-// credit: https://users.rust-lang.org/t/removing-multiple-indices-from-a-vector/65599/4
-fn remove_sorted_indices<T>(
-    v: impl IntoIterator<Item = T>,
-    indices: impl IntoIterator<Item = usize>,
-) -> Vec<T> {
-    let v = v.into_iter();
-    let mut indices = indices.into_iter();
-    let mut i = match indices.next() {
-        None => return v.collect(),
-        Some(i) => i,
-    };
-    let (min, max) = v.size_hint();
-    let mut result = Vec::with_capacity(max.unwrap_or(min));
-
-    for (j, x) in v.into_iter().enumerate() {
-        if j == i {
-            if let Some(idx) = indices.next() {
-                i = idx;
-            }
-        } else {
-            result.push(x);
-        }
-    }
-
-    result
 }
