@@ -82,40 +82,39 @@ impl FromStr for CephalopodOperationList {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut lines = s.lines();
-        let numbers_vec = lines
-            .next()
-            .ok_or("no lines passed")
-            .map(|lines| lines.split_whitespace().map(|d| vec![d]).collect_vec())?;
-        let numbers_vec: Vec<Vec<&str>> = lines
-            .take_while_ref(|l| {
-                let first_not_whitespace = l.trim_start();
-                !first_not_whitespace.is_empty()
-                    && unsafe {
-                        first_not_whitespace
-                            .chars()
-                            .next()
-                            .unwrap_unchecked()
-                            .is_ascii_digit()
-                    }
-            })
-            .map(|l| l.split_whitespace())
-            .fold(numbers_vec, |mut num, split| {
-                split.enumerate().for_each(|(i, d)| {
-                    num[i].push(d);
-                });
-                num
+        let mut lines = s.lines().collect_vec();
+        let last = lines.pop();
+        let lines = lines
+            .into_iter()
+            .map(|l| l.chars().collect_vec())
+            .collect_vec();
+        let mut numbers_vec = Vec::with_capacity(lines.len());
+        let mut nums = vec![];
+        for column in 0..lines[0].len() {
+            let mut num = 0;
+            lines.iter().for_each(|row| {
+                if let Some(d) = row[column].to_digit(10) {
+                    num = 10 * num + d;
+                }
             });
-        let signs = lines
-            .next()
-            .ok_or("no signs at last line")?
+            if num == 0 {
+                numbers_vec.push(nums);
+                nums = vec![];
+            } else {
+                nums.push(num as u64);
+            }
+        }
+        if !nums.is_empty() {
+            numbers_vec.push(nums);
+        }
+        let signs = last
+            .ok_or("no last line")?
             .split_whitespace()
             .map(Op::from_str)
             .collect::<Result<Vec<Op>, Self::Err>>()?;
         Ok(Self(
             numbers_vec
                 .into_iter()
-                .map(|numbers| todo!("cephalopod mapping"))
                 .zip(signs)
                 .map(|(numbers, sign)| Operation { numbers, sign })
                 .collect_vec(),
