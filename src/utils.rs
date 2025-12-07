@@ -9,10 +9,12 @@ pub fn get_input(year: usize, mod_name: &str) -> String {
 }
 
 fn get_in(year: usize, mod_name: &str, file_name: &str) -> String {
-    let file_path = format!(
-        "{}\\src\\y{year}\\{mod_name}\\{file_name}.txt",
-        env!("CARGO_MANIFEST_DIR")
-    );
+    let root: &'static str = env!("CARGO_MANIFEST_DIR");
+    let file_path = std::path::Path::new(root)
+        .join("src")
+        .join(format!("y{year}"))
+        .join(mod_name)
+        .join(format!("{file_name}.txt"));
     std::fs::read_to_string(file_path).unwrap()
 }
 
