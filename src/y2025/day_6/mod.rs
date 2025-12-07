@@ -5,6 +5,7 @@ pub struct Solution;
 
 impl crate::task_fns::TaskFns for Solution {
     fn task_1(&self, file: &str) -> String {
+        // SAFETY - valid input
         unsafe {
             OperationList::from_str(file)
                 .unwrap_unchecked()
@@ -17,6 +18,7 @@ impl crate::task_fns::TaskFns for Solution {
     }
 
     fn task_2(&self, file: &str) -> String {
+        // SAFETY - valid input
         unsafe {
             CephalopodOperationList::from_str(file)
                 .unwrap_unchecked()
@@ -136,15 +138,11 @@ impl FromStr for OperationList {
         })?;
         let numbers_vec = lines
             .take_while_ref(|l| {
-                let first_not_whitespace = l.trim_start();
-                !first_not_whitespace.is_empty()
-                    && unsafe {
-                        first_not_whitespace
-                            .chars()
-                            .next()
-                            .unwrap_unchecked()
-                            .is_ascii_digit()
-                    }
+                l.trim_start()
+                    .chars()
+                    .next()
+                    .map(|c| c.is_ascii_digit())
+                    .unwrap_or(false)
             })
             .map(|l| l.split_whitespace())
             .try_fold(

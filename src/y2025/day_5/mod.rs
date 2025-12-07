@@ -25,6 +25,7 @@ impl crate::task_fns::TaskFns for Solution {
     }
 
     fn task_2(&self, file: &str) -> String {
+        // SAFETY - valid input
         let db = unsafe {
             let (db, _) = file.split_once("\r\n\r\n").unwrap_unchecked();
             Database::from_str(db).unwrap_unchecked()
