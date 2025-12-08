@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::str::Lines;
 
 use pathfinding::matrix::directions::DIRECTIONS_4;
@@ -108,7 +109,7 @@ impl Ram {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         Ram::from_file(file, None)
             .unwrap()
             .find_path_length()
@@ -116,7 +117,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut ram = Ram::from_file(file, None).unwrap();
         while ram.find_path_length().is_some() {
             ram.make_step();

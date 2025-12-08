@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use core::panic;
 use std::{fmt::Debug, str::FromStr};
 
@@ -131,11 +132,11 @@ impl Computer {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         format!("{:?}", Computer::from_str(file).unwrap().run())
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         Computer::from_str(file)
             .unwrap()
             .find_min_self()

@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 
 fn get_locks_and_keys(file: &str) -> (Vec<Vec<u8>>, Vec<Vec<u8>>, u8) {
@@ -27,9 +28,8 @@ fn get_locks_and_keys(file: &str) -> (Vec<Vec<u8>>, Vec<Vec<u8>>, u8) {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let (locks, keys, height) = get_locks_and_keys(file);
-        println!("{locks:?}\n{keys:?}\n height: {height}");
         locks
             .iter()
             .cartesian_product(keys.iter())
@@ -38,7 +38,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         todo!("{file}")
     }
 }

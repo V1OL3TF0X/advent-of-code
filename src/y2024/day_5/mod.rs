@@ -1,8 +1,9 @@
+use crate::task_fns::SolveMode;
 use std::collections::HashMap;
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut lines = file.lines();
 
         let mut rules_by_prec_page = HashMap::new();
@@ -38,7 +39,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut lines = file.lines();
 
         let mut rules_by_prec_page = HashMap::new();

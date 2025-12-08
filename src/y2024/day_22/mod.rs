@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::{collections::VecDeque, num::ParseIntError};
 
 use rustc_hash::{FxHashMap, FxHashSet};
@@ -14,7 +15,7 @@ fn next_secret_num(mut num: u64) -> u64 {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(|l| l.parse::<u64>())
             .try_fold(0, |sum, n| {
@@ -24,7 +25,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(|l| l.parse::<u64>())
             .try_fold(FxHashMap::default(), |mut diff_cache, n| {

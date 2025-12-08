@@ -1,10 +1,11 @@
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 use std::str::FromStr;
 
 pub struct Solution;
 
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         unsafe {
             OperationList::from_str(file)
@@ -17,7 +18,7 @@ impl crate::task_fns::TaskFns for Solution {
         }
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         unsafe {
             CephalopodOperationList::from_str(file)

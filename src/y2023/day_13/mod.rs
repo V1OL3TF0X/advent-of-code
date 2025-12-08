@@ -1,12 +1,14 @@
 use std::{fmt::Debug, slice::Iter, str::Lines};
 
+use crate::task_fns::SolveMode;
+
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         solve(file, 0)
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         solve(file, 1)
     }
 }

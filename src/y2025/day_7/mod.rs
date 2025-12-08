@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::str::FromStr;
 
 use itertools::Itertools;
@@ -6,7 +7,7 @@ use rustc_hash::FxHashMap;
 pub struct Solution;
 
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         unsafe {
             BeamSplitter::from_str(file)
@@ -17,7 +18,7 @@ impl crate::task_fns::TaskFns for Solution {
         }
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         unsafe {
             BeamSplitter::from_str(file)

@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use crate::task_fns::TaskFns;
+use crate::task_fns::{SolveMode, TaskFns};
 
 const MAPS: [&str; 7] = [
     "seed-to-soil map:",
@@ -13,7 +13,7 @@ const MAPS: [&str; 7] = [
 ];
 pub struct Solution;
 impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut lines = file.lines();
         let seeds = to_nums(
             lines
@@ -52,7 +52,7 @@ impl TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut lines = file.lines();
         let seed_ranges = to_num_ranges(
             lines

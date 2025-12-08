@@ -1,12 +1,14 @@
 use std::collections::HashSet;
 
+use crate::task_fns::SolveMode;
+
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         Universe::from(file).distances_sum(2).to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         Universe::from(file).distances_sum(1_000_000).to_string()
     }
 }

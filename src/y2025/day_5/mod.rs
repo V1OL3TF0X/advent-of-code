@@ -1,9 +1,10 @@
-use std::{cmp::Ordering, str::FromStr};
+use crate::task_fns::SolveMode;
+use std::str::FromStr;
 
 pub struct Solution;
 
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         let (db, to_check) = unsafe {
             let (db, to_check) = file.split_once("\r\n\r\n").unwrap_unchecked();
@@ -24,7 +25,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         let db = unsafe {
             let (db, _) = file.split_once("\r\n\r\n").unwrap_unchecked();

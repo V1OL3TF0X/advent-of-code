@@ -2,7 +2,7 @@ use core::{panic, str};
 use std::{fmt::Display, str::FromStr};
 
 use aoc::{
-    task_fns::{Task, TaskFns},
+    task_fns::{SolveMode, Task, TaskFns},
     utils::{get_input, get_sample_input},
     y2023, y2024, y2025,
 };
@@ -37,12 +37,12 @@ fn main() {
             );
         }
     }
-    let get_file = if args.sample {
+    let (get_file, input_type): (fn(usize, &str) -> String, SolveMode) = if args.sample {
         println!("Running with sample solution...");
-        get_sample_input
+        (get_sample_input, SolveMode::Sample)
     } else {
         println!("Running with real solution...");
-        get_input
+        (get_input, SolveMode::Real)
     };
     let day_from = match args.day_from {
         AoCDay::All => 0,
@@ -58,7 +58,7 @@ fn main() {
         .for_each(|day| {
             let file = get_file(args.year, &format!("day_{day}"));
             match get_task_fns(&day) {
-                Ok(task_fn) => task_fn.run(&file, args.mode, day),
+                Ok(task_fn) => task_fn.run(&file, args.mode, day, input_type),
                 Err(err) => println!("{err}"),
             }
         });

@@ -1,6 +1,7 @@
 pub struct Solution;
+use crate::task_fns::SolveMode;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut num_of_zeroes = 0;
         file.lines().map(parse_line).fold(50, |mut sum, value| {
             sum += value;
@@ -18,7 +19,7 @@ impl crate::task_fns::TaskFns for Solution {
         num_of_zeroes.to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut num_of_zeroes = 0;
         file.lines()
             .map(parse_line_2)

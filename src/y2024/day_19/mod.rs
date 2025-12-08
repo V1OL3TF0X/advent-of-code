@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use rustc_hash::FxHashMap;
 
 fn ways_is_possible_to_make<'a>(
@@ -31,14 +32,14 @@ fn make_possible_iter(file: &str) -> impl Iterator<Item = u64> + '_ {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         make_possible_iter(file)
             .filter(|ways_to_make| *ways_to_make > 0)
             .count()
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         make_possible_iter(file).sum::<u64>().to_string()
     }
 }

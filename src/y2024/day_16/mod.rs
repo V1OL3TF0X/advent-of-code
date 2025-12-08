@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::{iter::once, str::FromStr};
 
 use itertools::Itertools;
@@ -136,14 +137,14 @@ impl FromStr for Labitynth {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         Labitynth::from_str(file)
             .unwrap()
             .solve_dijkstra()
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         Labitynth::from_str(file)
             .unwrap()
             .solve_all_shortest()

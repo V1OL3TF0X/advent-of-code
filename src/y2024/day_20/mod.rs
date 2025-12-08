@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::str::FromStr;
 
 use pathfinding::matrix::directions::DIRECTIONS_4;
@@ -81,7 +82,7 @@ impl Racetrack {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         Racetrack::from_str(file)
             .unwrap()
             .find_cheats_in_rad(2, 100)
@@ -91,7 +92,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         Racetrack::from_str(file)
             .unwrap()
             .find_cheats_in_rad(20, 100)

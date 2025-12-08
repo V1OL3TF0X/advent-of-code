@@ -1,13 +1,16 @@
-use crate::{task_fns::TaskFns, trie::Trie};
+use crate::{
+    task_fns::{SolveMode, TaskFns},
+    trie::Trie,
+};
 use once_cell::sync::Lazy;
 pub struct Solution;
 impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let sum: u32 = file.lines().map(combine_first_last_digit).sum();
         sum.to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(find_first_last_digit_or_word)
             .sum::<u32>()

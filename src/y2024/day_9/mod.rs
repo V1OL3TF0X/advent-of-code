@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 
 #[derive(Clone, Debug)]
@@ -40,11 +41,11 @@ fn compress_task_1(mut files: Vec<Section>, gaps: Vec<u64>) -> Vec<Section> {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         solve(file, compress_task_1)
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         solve(file, compress_task_2)
     }
 }

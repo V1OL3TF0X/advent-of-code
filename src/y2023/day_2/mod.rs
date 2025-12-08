@@ -1,4 +1,4 @@
-use crate::task_fns::TaskFns;
+use crate::task_fns::{SolveMode, TaskFns};
 
 struct Game {
     id: u32,
@@ -97,7 +97,7 @@ fn new_value(color: &str, old: u32, new: u32, limit: u32) -> Result<u32, String>
 }
 pub struct Solution;
 impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let red_limit = 12;
         let green_limit = 13;
         let blue_limit = 14;
@@ -108,7 +108,7 @@ impl TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(Game::from)
             .map(|g: Game| g.get_power())

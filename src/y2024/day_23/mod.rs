@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 use rustc_hash::{FxHashMap, FxHashSet};
 
@@ -61,7 +62,7 @@ fn bron_kerbosh<'a>(
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut three_interconnected = FxHashSet::default();
         let connections = get_computer_connections(file);
         connections.iter().for_each(|(from, to_list)| {
@@ -81,7 +82,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         max_clique(&mut get_computer_connections(file)).join(",")
     }
 }

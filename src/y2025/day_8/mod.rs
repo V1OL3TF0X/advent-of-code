@@ -1,25 +1,29 @@
 use std::{cmp::Reverse, collections::BinaryHeap, hash::Hash, str::FromStr};
 
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 use ouroboros::self_referencing;
 use rustc_hash::FxHashSet;
 use union_find::{QuickFindUf, UnionBySize, UnionFind};
 
 pub struct Solution;
-const CONNECTIONS: usize = 10;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, mode: SolveMode) -> String {
+        let connections = match mode {
+            SolveMode::Sample => 10,
+            SolveMode::Real => 1000,
+        };
         let mut grid = unsafe { Grid::from_str(file).unwrap_unchecked() };
         let mut uf = QuickFindUf::<UnionBySize>::new(grid.borrow_boxes().len());
         grid.with_distances_mut(|dist_heap| {
-            for _ in 0..CONNECTIONS {
+            for _ in 0..connections {
                 let Reverse(pair) = unsafe { dist_heap.pop().unwrap_unchecked() };
                 uf.union(pair.a, pair.b);
             }
         });
         let mut roots = FxHashSet::default();
         let mut res = 1;
-        let mut circuits_by_size = BinaryHeap::from_iter((0..CONNECTIONS).flat_map(|i| {
+        let mut circuits_by_size = BinaryHeap::from_iter((0..connections).flat_map(|i| {
             let root = uf.find(i);
             if roots.contains(&root) {
                 return None;
@@ -33,7 +37,7 @@ impl crate::task_fns::TaskFns for Solution {
         res.to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut grid = unsafe { Grid::from_str(file).unwrap_unchecked() };
         let boxes_count = grid.borrow_boxes().len();
         let mut uf = QuickFindUf::<UnionBySize>::new(boxes_count);

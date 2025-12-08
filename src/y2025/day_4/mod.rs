@@ -1,14 +1,15 @@
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 
 pub struct Solution;
 
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let map = get_map(file);
         get_removable(&map).len().to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut map = get_map(file);
         let mut total = 0;
         let mut removable = get_removable(&map);

@@ -1,10 +1,10 @@
+use crate::task_fns::SolveMode;
 use std::str::{Lines, SplitWhitespace};
 
-use crate::task_fns::TaskFns;
 pub struct Solution;
 
-impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+impl crate::task_fns::TaskFns for Solution {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let (time_values, dist_values) = get_time_and_dist_values(file);
         let time_values = time_values.map(|n| n.parse::<u64>().expect(n));
         let dist_values = dist_values.map(|n| n.parse::<u64>().expect(n));
@@ -16,7 +16,7 @@ impl TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let (time_values, dist_values) = get_time_and_dist_values(file);
         let time = make_single_num(time_values);
         let dist = make_single_num(dist_values);

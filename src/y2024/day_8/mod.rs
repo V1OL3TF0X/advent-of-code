@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::{
     cmp::Ordering,
     collections::{HashMap, HashSet},
@@ -253,7 +254,7 @@ impl Antennas {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         Antennas::from_str(file)
             .unwrap()
             .get_antinodes_1()
@@ -261,7 +262,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         Antennas::from_str(file)
             .unwrap()
             .get_antinodes_2()

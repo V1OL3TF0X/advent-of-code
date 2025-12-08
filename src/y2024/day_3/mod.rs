@@ -1,8 +1,9 @@
+use crate::task_fns::SolveMode;
 use regex::Regex;
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let regex = Regex::new(r"mul\((?<f>\d+),(?<s>\d+)\)").unwrap();
         regex
             .captures_iter(file)
@@ -11,7 +12,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let regex =
             Regex::new(r"(mul\((?<f>\d+),(?<s>\d+)\))|(?<do>do\(\))|(?<dont>don't\(\))").unwrap();
         let mut enabled = true;

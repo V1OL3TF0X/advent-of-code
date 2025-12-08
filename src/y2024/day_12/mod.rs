@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use itertools::Itertools;
 use rustc_hash::FxHashMap;
 use union_find::{QuickUnionUf, UnionBySize, UnionFind};
@@ -6,7 +7,7 @@ const DIRECTIONS: [isize; 2] = [-1, 1];
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let table: Vec<Vec<char>> = file.lines().map(|l| l.chars().collect()).collect();
         let mut perimiters = vec![4; table[0].len() * table.len()];
         let mut uf = QuickUnionUf::<UnionBySize>::new(table.len() * table[0].len());
@@ -54,7 +55,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut table: Vec<Vec<char>> = file
             .lines()
             .map(|l| {

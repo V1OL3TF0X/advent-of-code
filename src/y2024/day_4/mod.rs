@@ -1,7 +1,8 @@
+use crate::task_fns::SolveMode;
 use std::cmp::min;
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let table: Vec<Vec<_>> = file
             .lines()
             .map(|l| l.chars().collect::<Vec<_>>())
@@ -101,7 +102,7 @@ impl crate::task_fns::TaskFns for Solution {
         (found.len() / 4).to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let table: Vec<Vec<_>> = file
             .lines()
             .map(|l| l.chars().collect::<Vec<_>>())

@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::{collections::HashMap, iter, str::Lines};
 
 use regex::{Captures, Regex};
@@ -7,7 +8,7 @@ use crate::task_fns::TaskFns;
 type NodeMap<'a> = HashMap<&'a str, (&'a str, &'a str)>;
 pub struct Solution;
 impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut lines = file.lines();
         let instructions = lines.next().unwrap().chars().cycle();
         lines.next().unwrap();
@@ -23,7 +24,7 @@ impl TaskFns for Solution {
         .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut lines = file.lines();
         let instructions: Vec<char> = lines.next().unwrap().chars().collect();
         let instruction_num = instructions.len();

@@ -1,13 +1,14 @@
 mod task_1;
+use crate::task_fns::SolveMode;
 mod task_2;
 
 use crate::{task_fns::TaskFns, vecmap::VecMap};
 pub struct Solution;
 impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         solve::<task_1::Task1>(file)
     }
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         solve::<task_2::Task2>(file)
     }
 }

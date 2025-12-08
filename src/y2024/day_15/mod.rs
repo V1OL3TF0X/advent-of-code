@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use core::panic;
 use std::{char, fmt::Debug};
 
@@ -176,11 +177,11 @@ where
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         solve::<TileTask1>(file)
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         solve::<TileTask2>(file)
     }
 }

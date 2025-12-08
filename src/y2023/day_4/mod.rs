@@ -1,10 +1,10 @@
 use regex::Regex;
 use std::collections::HashSet;
 
-use crate::task_fns::TaskFns;
+use crate::task_fns::{SolveMode, TaskFns};
 pub struct Solution;
 impl TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(Card::from)
             .map(Card::get_score)
@@ -12,7 +12,7 @@ impl TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let card_num = file.lines().count();
         let last_card_ind = card_num - 1;
         let mut card_count = vec![1; card_num];

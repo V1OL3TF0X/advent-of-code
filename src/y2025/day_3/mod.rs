@@ -1,7 +1,8 @@
 pub struct Solution;
+use crate::task_fns::SolveMode;
 
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(get_bank)
             .map(|bank| find_number_from_n_max_digits(bank, 2))
@@ -9,7 +10,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(get_bank)
             .map(|bank| find_number_from_n_max_digits(bank, 12))

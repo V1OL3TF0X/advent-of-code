@@ -1,8 +1,9 @@
+use crate::task_fns::SolveMode;
 use std::collections::HashMap;
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut ids: (Vec<u32>, Vec<u32>) = file
             .lines()
             .map(|l| {
@@ -23,7 +24,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let (left, right): (Vec<u32>, HashMap<u32, u32>) =
             file.lines()
                 .fold((vec![], HashMap::new()), |(mut v, mut m), l| {
@@ -42,4 +43,3 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 }
-

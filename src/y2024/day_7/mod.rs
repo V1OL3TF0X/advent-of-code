@@ -1,7 +1,7 @@
+use crate::task_fns::SolveMode;
 use std::{fmt::Debug, marker::PhantomData, str::FromStr};
 
 trait OperationChain: Debug {
-    const LAST: Operation;
     fn as_next(op: &Operation) -> Operation;
 }
 
@@ -11,7 +11,6 @@ struct OperationTask1;
 struct OperationTask2;
 
 impl OperationChain for OperationTask1 {
-    const LAST: Operation = Operation::Multiply;
     fn as_next(op: &Operation) -> Operation {
         match op {
             Operation::Add => Operation::Multiply,
@@ -38,7 +37,6 @@ impl Operation {
 }
 
 impl OperationChain for OperationTask2 {
-    const LAST: Operation = Operation::Concat;
     fn as_next(op: &Operation) -> Operation {
         match op {
             Operation::Add => Operation::Multiply,
@@ -152,7 +150,7 @@ impl<'a, Op: OperationChain> Iterator for EquationIter<'a, Op> {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .flat_map(Equation::from_str)
             .filter_map(|e| {
@@ -163,7 +161,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .flat_map(Equation::from_str)
             .filter_map(|e| {

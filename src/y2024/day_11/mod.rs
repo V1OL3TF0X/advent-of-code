@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use rustc_hash::FxHashMap;
 
 fn solve(stone: u64, blinks: u32, cache: &mut FxHashMap<(u64, u32), usize>) -> usize {
@@ -22,7 +23,7 @@ fn solve(stone: u64, blinks: u32, cache: &mut FxHashMap<(u64, u32), usize>) -> u
 }
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut cache = FxHashMap::default();
         file.split_whitespace()
             .map(|c| c.parse::<u64>().unwrap())
@@ -31,7 +32,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut cache = FxHashMap::default();
         file.split_whitespace()
             .map(|c| c.parse::<u64>().unwrap())

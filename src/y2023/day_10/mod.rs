@@ -1,15 +1,17 @@
 mod labirynth;
 use labirynth::{Labirynth, Pipe};
 
+use crate::task_fns::SolveMode;
+
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         (parse_input(file).into_iter().count() as f64 / 2.0)
             .floor()
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut lab = parse_input(file);
         lab.iter_mut()
             .for_each(|p| *p = Pipe::LabirynthPart(Box::new(p.clone())));
@@ -88,7 +90,7 @@ fn decide(pipe: &Pipe, edge_start: &mut &Pipe, lab_parts: &mut usize) {
 #[cfg(test)]
 mod tests {
     use super::Solution;
-    use crate::task_fns::TaskFns;
+    use crate::task_fns::{SolveMode, TaskFns};
 
     #[test]
     fn pt_2_0() {
@@ -102,7 +104,7 @@ L---JF-JLJ.||-FJLJJ7
 7-L-JL7||F7|L7F-7F7|
 L.L7LFJ|||||FJL7||LJ
 L7JLJL-JLJLJL--JLJ.L";
-        assert_eq!(Solution.task_2(input), "10")
+        assert_eq!(Solution.task_2(input, SolveMode::Sample), "10")
     }
     #[test]
     fn pt_2_1() {
@@ -115,7 +117,7 @@ L7JLJL-JLJLJL--JLJ.L";
 .|..|.|..|.
 .L--J.L--J.
 ...........";
-        assert_eq!(Solution.task_2(input), "4")
+        assert_eq!(Solution.task_2(input, SolveMode::Sample), "4")
     }
     #[test]
     fn pt_2_2() {
@@ -129,23 +131,6 @@ L--J.L7...LJS7F-7L7.
 .....|FJLJ|FJ|F7|.LJ
 ....FJL-7.||.||||...
 ....L---J.LJ.LJLJ...";
-        assert_eq!(Solution.task_2(input), "8")
-    }
-}
-
-#[derive(PartialEq, Eq, Clone, Copy)]
-enum Dir {
-    Up,
-    Down,
-    None,
-}
-
-impl From<&Pipe> for Dir {
-    fn from(value: &Pipe) -> Self {
-        match value {
-            &Pipe::NEBend | &Pipe::NWBend => Dir::Up,
-            &Pipe::SWBend | &Pipe::SEBend => Dir::Down,
-            _ => Dir::None,
-        }
+        assert_eq!(Solution.task_2(input, SolveMode::Sample), "8")
     }
 }

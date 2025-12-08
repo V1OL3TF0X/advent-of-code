@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use core::panic;
 use std::{
     iter::once,
@@ -114,13 +115,13 @@ fn extract_value(prefix: &str, values: &mut Values, equations: &Equations<'_>) -
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let (mut v, eq) = parse(file);
         extract_value("z", &mut v, &eq).to_string()
     }
 
     // fixing the Ripple Carry Adder
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let (_, equations) = parse::<Vec<_>>(file);
         let out_num = equations.iter().filter(|(k, _)| k.starts_with("z")).count() - 1;
         let last = format!("z{out_num:02}");

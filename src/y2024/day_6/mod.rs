@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::collections::HashSet;
 
 #[derive(Clone, Copy, Hash, Eq, PartialEq)]
@@ -137,7 +138,7 @@ impl Table {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let mut table = Table::from_str(file);
         let mut path_count = 0;
         table.walk(
@@ -151,7 +152,7 @@ impl crate::task_fns::TaskFns for Solution {
         path_count.to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let mut table = Table::from_str(file);
         let mut walked_pos = vec![];
         *table.get_guard_cell_mut() = 'X';

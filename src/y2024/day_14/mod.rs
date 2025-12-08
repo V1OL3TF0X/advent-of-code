@@ -1,3 +1,4 @@
+use crate::task_fns::SolveMode;
 use std::fmt::Debug;
 
 use regex::Regex;
@@ -55,7 +56,7 @@ fn n(num: &str) -> i64 {
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         let robot_regex = Regex::new(ROBOT_REGEX_STR).unwrap();
         let mut lines = file.lines();
         let (width, height) = lines
@@ -79,7 +80,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         let robot_regex = Regex::new(ROBOT_REGEX_STR).unwrap();
         let mut lines = file.lines();
         let (width, height) = lines

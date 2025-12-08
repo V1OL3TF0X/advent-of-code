@@ -1,8 +1,9 @@
+use crate::task_fns::SolveMode;
 use crate::utils::to_nums;
 
 pub struct Solution;
 impl crate::task_fns::TaskFns for Solution {
-    fn task_1(&self, file: &str) -> String {
+    fn task_1(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(to_nums)
             .map(get_next_in_seq)
@@ -10,7 +11,7 @@ impl crate::task_fns::TaskFns for Solution {
             .to_string()
     }
 
-    fn task_2(&self, file: &str) -> String {
+    fn task_2(&self, file: &str, _: SolveMode) -> String {
         file.lines()
             .map(to_nums)
             .map(get_prev_in_seq)
