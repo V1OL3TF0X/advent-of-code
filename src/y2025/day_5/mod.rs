@@ -7,7 +7,10 @@ impl crate::task_fns::TaskFns for Solution {
     fn task_1(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         let (db, to_check) = unsafe {
-            let (db, to_check) = file.split_once("\r\n\r\n").unwrap_unchecked();
+            let (db, to_check) = file
+                .split_once("\n\n")
+                .or_else(|| file.split_once("\r\n\r\n"))
+                .unwrap_unchecked();
             (Database::from_str(db).unwrap_unchecked(), to_check)
         };
         to_check
@@ -18,7 +21,6 @@ impl crate::task_fns::TaskFns for Solution {
                     .ranges
                     .iter()
                     .find(|(from, to)| from <= ingredient && ingredient <= to);
-                println!("{includes:?} includes {ingredient}");
                 includes.is_some()
             })
             .count()
@@ -28,7 +30,10 @@ impl crate::task_fns::TaskFns for Solution {
     fn task_2(&self, file: &str, _: SolveMode) -> String {
         // SAFETY - valid input
         let db = unsafe {
-            let (db, _) = file.split_once("\r\n\r\n").unwrap_unchecked();
+            let (db, _) = file
+                .split_once("\n\n")
+                .or_else(|| file.split_once("\r\n\r\n"))
+                .unwrap_unchecked();
             Database::from_str(db).unwrap_unchecked()
         };
 

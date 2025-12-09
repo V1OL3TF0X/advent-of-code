@@ -45,7 +45,7 @@ fn main() {
         (get_input, SolveMode::Real)
     };
     let day_from = match args.day_from {
-        AoCDay::All => 0,
+        AoCDay::All => 1,
         AoCDay::One(v) => v,
     };
     let day_to = match args.day_to {

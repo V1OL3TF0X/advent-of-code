@@ -1,7 +1,10 @@
 use std::{
     fmt::Debug,
     ops::{Add, AddAssign},
+    str::FromStr,
 };
+
+use geo::Coord;
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy)]
 pub enum Direction {
@@ -88,6 +91,45 @@ pub struct Point(pub i64, pub i64);
 impl Point {
     pub const fn new(x: usize, y: usize) -> Self {
         Self(x as i64, y as i64)
+    }
+}
+
+impl FromStr for Point {
+    type Err = &'static str;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        s.split_once(',')
+            .ok_or("no , in string to create point")
+            .and_then(|(a, b)| {
+                Ok((
+                    a.parse().map_err(|_| "couldn't parse first coordinate")?,
+                    b.parse().map_err(|_| "couldn't parse second coordinate")?,
+                ))
+            })
+            .map(Point::from)
+    }
+}
+
+impl From<Point> for Coord<i64> {
+    fn from(value: Point) -> Self {
+        Self {
+            x: value.0,
+            y: value.1,
+        }
+    }
+}
+impl From<Point> for Coord<f64> {
+    fn from(value: Point) -> Self {
+        Self {
+            x: value.0 as f64,
+            y: value.1 as f64,
+        }
+    }
+}
+
+impl From<(i64, i64)> for Point {
+    fn from(value: (i64, i64)) -> Self {
+        Self(value.0, value.1)
     }
 }
 
