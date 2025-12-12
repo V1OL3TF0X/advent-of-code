@@ -109,6 +109,7 @@ dependencies = [
  "rayon",
  "regex",
  "rustc-hash",
+ "split-paragraphs",
  "union-find",
 ]
 
@@ -893,6 +894,12 @@ dependencies = [
  "robust",
  "smallvec",
 ]
+
+[[package]]
+name = "split-paragraphs"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c1bbb62befd5b1529bfaa5cf53a9594b2f158bcee5505ac70d933d580d2cb3da"
 
 [[package]]
 name = "stable_deref_trait"
